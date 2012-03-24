@@ -5,12 +5,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #include "buffer.h"
 
+/* bleh globals */
 static const char whitespace[] = " \t\r\n";
+static struct Buffer_char includes;
 static int ccArgc;
 static char **ccArgv;
+
+struct CCState {
+    int pid;
+    int pipe;
+    FILE *f;
+};
+
+static int startCC(struct CCState *ccs)
+{
+    int pid, pfd[2], tmpi;
+
+    /* get our pipe */
+    SF(tmpi, pipe, -1, (pfd));
+
+    /* and our fork */
+    SF(pid, fork, -1, ());
+    if (pid == 0) {
+        /* prepare stdin */
+        dup2(pfd[0], 0);
+        close(pfd[0]);
+        close(pfd[1]);
+
+        /* and call the compiler */
+        execvp(ccArgv[0], ccArgv);
+        abort();
+        *((int *) 0) = 0;
+        while (1);
+    }
+
+    /* give them the info */
+    close(pfd[0]);
+    ccs->pid = pid;
+    ccs->pipe = pfd[1];
+    ccs->f = fdopen(pfd[1], "w");
+
+    return 0;
+}
+
+static int endCC(struct CCState *ccs)
+{
+    int ret, status;
+
+    /* close our output */
+    fclose(ccs->f);
+    close(ccs->pipe);
+
+    /* and get the result */
+    ret = waitpid(ccs->pid, &status, 0);
+    if (ret == ccs->pid) return status;
+    else return 1;
+}
 
 static char *getCommand(char **buf)
 {
@@ -65,6 +121,11 @@ static char *trimWhitespace(char *buf)
 
 static void handle_include(char **sp) {
     char *cmd = strtok_r(NULL, "", sp);
+
+    /* put it both in includes and stdout */
+    EXPAND_BUFFER_TO(includes, strlen(cmd) + 14);
+    includes.bufused += sprintf(BUFFER_END(includes),
+        "#include %s\n", cmd);
     printf("#include %s\n", cmd);
 }
 
@@ -116,7 +177,8 @@ static void handleStructDeclaration(struct Buffer_char *str,
     char *pureStructNm, char *decl)
 {
     char *name;
-    int isArray;
+    int isArray, hostSupports;
+    struct CCState ccs;
 
     /* our "type" handling is extremely primitive, to say the least, we only
      * care about the name and our special tags, if present */
@@ -128,26 +190,43 @@ static void handleStructDeclaration(struct Buffer_char *str,
     /* get just the name part */
     name = getDeclName(decl, &isArray);
 
-    if (isArray) {
-        EXPAND_BUFFER_TO(*h2g, strlen(name)*6 + 106);
-        h2g->bufused += sprintf(BUFFER_END(*h2g),
-            "memcpy(guest->%s, host->%s, ((sizeof(guest->%s)<sizeof(host->%s))?sizeof(guest->%s):sizeof(host->%s)));\n",
-            name, name, name, name, name, name);
-        EXPAND_BUFFER_TO(*g2h, strlen(name)*6 + 106);
-        g2h->bufused += sprintf(BUFFER_END(*g2h),
-            "memcpy(host->%s, guest->%s, ((sizeof(guest->%s)<sizeof(host->%s))?sizeof(guest->%s):sizeof(host->%s)));\n",
-            name, name, name, name, name, name);
+    /* figure out if the host supports it */
+    hostSupports = 0;
+    if (!startCC(&ccs)) {
+        fprintf(ccs.f, "%.*s"
+            "void __support_test() {\n"
+            "%s __support_test_struct;\n"
+            "(void) __support_test_struct.%s;\n"
+            "}\n",
+            includes.bufused, includes.buf,
+            pureStructNm, name);
+        if (!endCC(&ccs)) {
+            hostSupports = 1;
+        }
+    }
 
-    } else {
-        EXPAND_BUFFER_TO(*h2g, strlen(name)*2 + 24);
-        h2g->bufused += sprintf(BUFFER_END(*h2g),
-            "guest->%s = host->%s;\n",
-            name, name);
-        EXPAND_BUFFER_TO(*g2h, strlen(name)*2 + 24);
-        g2h->bufused += sprintf(BUFFER_END(*g2h),
-            "host->%s = guest->%s;\n",
-            name, name);
+    if (hostSupports) {
+        if (isArray) {
+            EXPAND_BUFFER_TO(*h2g, strlen(name)*6 + 106);
+            h2g->bufused += sprintf(BUFFER_END(*h2g),
+                "memcpy(guest->%s, host->%s, ((sizeof(guest->%s)<sizeof(host->%s))?sizeof(guest->%s):sizeof(host->%s)));\n",
+                name, name, name, name, name, name);
+            EXPAND_BUFFER_TO(*g2h, strlen(name)*6 + 106);
+            g2h->bufused += sprintf(BUFFER_END(*g2h),
+                "memcpy(host->%s, guest->%s, ((sizeof(guest->%s)<sizeof(host->%s))?sizeof(guest->%s):sizeof(host->%s)));\n",
+                name, name, name, name, name, name);
 
+        } else {
+            EXPAND_BUFFER_TO(*h2g, strlen(name)*2 + 24);
+            h2g->bufused += sprintf(BUFFER_END(*h2g),
+                "guest->%s = host->%s;\n",
+                name, name);
+            EXPAND_BUFFER_TO(*g2h, strlen(name)*2 + 24);
+            g2h->bufused += sprintf(BUFFER_END(*g2h),
+                "host->%s = guest->%s;\n",
+                name, name);
+
+        }
     }
 }
 
@@ -214,7 +293,8 @@ static void handleEnumFlagsDeclaration(struct Buffer_char *h2g,
     struct Buffer_char *g2h, char *structNm, char *decl, int flags)
 {
     char *name, *value, *saveptr;
-    int i;
+    int i, hostSupports;
+    struct CCState ccs;
 
     /* get just the name part */
     name = strtok_r(decl, whitespace, &saveptr);
@@ -231,26 +311,42 @@ static void handleEnumFlagsDeclaration(struct Buffer_char *h2g,
     value = strtok_r(NULL, "", &saveptr);
     if (!value) return;
     trimWhitespace(value);
-
     printf("#define MC_%s %s\n", name, value);
-    if (flags) {
-        EXPAND_BUFFER_TO(*h2g, strlen(value) + strlen(name) + 24);
-        h2g->bufused += sprintf(BUFFER_END(*h2g),
-            "if(host&%s)guest|=%s;\n",
-            name, value);
-        EXPAND_BUFFER_TO(*g2h, strlen(value) + strlen(name) + 24);
-        g2h->bufused += sprintf(BUFFER_END(*g2h),
-            "if(guest&%s)host|=%s;\n",
-            value, name);
-    } else {
-        EXPAND_BUFFER_TO(*h2g, strlen(value) + strlen(name) + 24);
-        h2g->bufused += sprintf(BUFFER_END(*h2g),
-            "if(host==%s)guest=%s;\n",
-            name, value);
-        EXPAND_BUFFER_TO(*g2h, strlen(value) + strlen(name) + 24);
-        g2h->bufused += sprintf(BUFFER_END(*g2h),
-            "if(guest==%s)host=%s;\n",
-            value, name);
+
+    /* figure out if the host supports it */
+    hostSupports = 0;
+    if (!startCC(&ccs)) {
+        fprintf(ccs.f, "%.*s"
+            "void __support_test() {\n"
+            "(void) %s;\n"
+            "}\n",
+            includes.bufused, includes.buf,
+            name);
+        if (!endCC(&ccs)) {
+            hostSupports = 1;
+        }
+    }
+
+    if (hostSupports) {
+        if (flags) {
+            EXPAND_BUFFER_TO(*h2g, strlen(value) + strlen(name) + 24);
+            h2g->bufused += sprintf(BUFFER_END(*h2g),
+                "if(host&%s)guest|=%s;\n",
+                name, value);
+            EXPAND_BUFFER_TO(*g2h, strlen(value) + strlen(name) + 24);
+            g2h->bufused += sprintf(BUFFER_END(*g2h),
+                "if(guest&%s)host|=%s;\n",
+                value, name);
+        } else {
+            EXPAND_BUFFER_TO(*h2g, strlen(value) + strlen(name) + 24);
+            h2g->bufused += sprintf(BUFFER_END(*h2g),
+                "if(host==%s)guest=%s;\n",
+                name, value);
+            EXPAND_BUFFER_TO(*g2h, strlen(value) + strlen(name) + 24);
+            g2h->bufused += sprintf(BUFFER_END(*g2h),
+                "if(guest==%s)host=%s;\n",
+                value, name);
+        }
     }
 }
 
@@ -339,6 +435,7 @@ int main(int argc, char **argv)
     char *cmd, *cur;
     int started = 0;
 
+    INIT_BUFFER(includes);
     ccArgc = argc - 1;
     ccArgv = argv + 1;
 

@@ -19,4 +19,4 @@ noinst_PROGRAMS = convgen
 convgen_SOURCES = convgen.c
 
 %.h: %.conv convgen$(EXEEXT)
-	$(target)-gcc -E - < $< | ./convgen$(EXEEXT) $(CC) $(CFLAGS) $(LDFLAGS) -x c - > $@
+	$(target)-gcc -E - < $< | ./convgen$(EXEEXT) $(CC) $(CFLAGS) $(LDFLAGS) -c -o /dev/null -x c - > $@
