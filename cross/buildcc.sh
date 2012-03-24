@@ -34,8 +34,8 @@ GCC_VERSION=4.7.0
 export PATH="$PREFIX/bin:$PATH"
 
 # binutils
-#fetchextract http://ftp.gnu.org/gnu/binutils/ binutils-$BINUTILS_VERSION .tar.bz2
-#buildinstall 1 binutils-$BINUTILS_VERSION --target=$TRIPLET
+fetchextract http://ftp.gnu.org/gnu/binutils/ binutils-$BINUTILS_VERSION .tar.bz2
+buildinstall 1 binutils-$BINUTILS_VERSION --target=$TRIPLET
 
 # gcc 1
 fetchextract http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VERSION/ gcc-$GCC_VERSION .tar.bz2
