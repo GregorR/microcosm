@@ -1,0 +1,28 @@
+The C library is maintained separately. Fetch it from
+https://github.com/GregorR/musl , branch 'microcosm'.
+
+To build Microcosm:
+
+1) Build the cross-compiler (cd cross ; ./buildcc.sh)
+
+2) Build libmicrocosm (cd libmicrocosm ; make ; make install)
+
+3) Build the dynamic loader
+    cd gelfload
+    ./configure --prefix=/opt/microcosm
+    make all install
+
+4) Build the C library, musl (cd musl ; cp ../musl.config.mak config.mak ; make all install)
+
+5) Symlink the C library into the dynamic loader's path
+    mkdir -p /opt/microcosm/lib/microcosm
+    ln -s /opt/cross/x86_64-pc-microcosm/x86_64-pc-microcosm/lib/libc.so /opt/microcosm/lib/microcosm/libc.so
+
+6) Build the host library
+    cd libmicrocosm_host
+    ./configure --target=x86_64-pc-microcosm --prefix=<somewhere you can load .so files from>
+    make all install
+
+7) Run stuff
+    x86_64-pc-microcosm-gcc my-favorite-c-program.c
+    /opt/microcosm/bin/microcosm ./a.out
