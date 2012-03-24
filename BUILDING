@@ -7,10 +7,11 @@ To build Microcosm:
 
 1) Build the cross-compiler (cd cross ; ./buildcc.sh)
 
-2) Build libmicrocosm
+2) Build host components of libmicrocosm
     cd libmicrocosm
     ./configure --prefix=/opt/cross/x86_64-pc-microcosm --target=x86_64-pc-microcosm
-    make all install
+    make libmicrocosm.so libmicrocosm.so.1
+    cp libmicrocosm.so* /opt/cross/x86_64-pc-microcosm/x86_64-pc-microcosm/lib
 
 3) Build the dynamic loader
     cd gelfload
@@ -19,10 +20,14 @@ To build Microcosm:
 
 4) Build the C library, musl (cd musl ; cp ../musl.config.mak config.mak ; make all install)
 
-5) Symlink the C library and host wrapper into the dynamic loader's path
+5) Build libmicrocosm
+    cd libmicrocosm
+    make all install
+
+6) Symlink the C library and host wrapper into the dynamic loader's path
     mkdir -p /opt/microcosm/lib/microcosm
     ln -s /opt/cross/x86_64-pc-microcosm/x86_64-pc-microcosm/lib/lib{c,microcosm}.so* /opt/microcosm/lib/microcosm/
 
-6) Run stuff
+7) Run stuff
     x86_64-pc-microcosm-gcc my-favorite-c-program.c
     /opt/microcosm/bin/microcosm ./a.out

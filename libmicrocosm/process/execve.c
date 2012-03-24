@@ -1,8 +1,14 @@
-#include <alloca.h>
 #include <stdio.h>
 #include <unistd.h>
 
+#include "config.h"
 #include "reerrno.h"
+
+#ifndef HAVE_EXECVPE
+#ifdef HAVE_EXECVP
+#define execvpe execvP
+#endif
+#endif
 
 /* FIXME: this should use VFS */
 

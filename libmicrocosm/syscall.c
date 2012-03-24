@@ -42,7 +42,7 @@ FW(getegid); /* 108 */
 /* wrapped syscalls (simple case) */
 #define W(nm) case MC_SYS_##nm: return MC_##nm(a, b, c, d, e, f)
 
-VISIBLE long __syscall(long n, long a, long b, long c, long d, long e, long f)
+VISIBLE long microcosm____syscall(long n, long a, long b, long c, long d, long e, long f)
 {
     long ret;
 
@@ -118,8 +118,8 @@ VISIBLE long __syscall(long n, long a, long b, long c, long d, long e, long f)
     }
 }
 
-VISIBLE long __syscall_cp(long n, long a, long b, long c, long d, long e, long f)
+VISIBLE long microcosm____syscall_cp(long n, long a, long b, long c, long d, long e, long f)
 {
     /* FIXME: really do the _cp part */
-    return __syscall(n, a, b, c, d, e, f);
+    return microcosm____syscall(n, a, b, c, d, e, f);
 }

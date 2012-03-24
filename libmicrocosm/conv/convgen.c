@@ -1,5 +1,4 @@
-#define _POSIX_SOURCE /* for strtok_r */
-#define _SVID_SOURCE /* for strdup */
+#define _XOPEN_SOURCE
 
 #include <ctype.h>
 #include <stdio.h>

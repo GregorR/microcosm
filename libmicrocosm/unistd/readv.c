@@ -1,4 +1,3 @@
-#include <alloca.h>
 #include <sys/uio.h>
 
 #include "reerrno.h"

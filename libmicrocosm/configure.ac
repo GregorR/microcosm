@@ -34,6 +34,7 @@ AC_SUBST(hostlib_soname)
 # Checks for typedefs, structures, and compiler characteristics.
 
 # Checks for library functions.
+AC_CHECK_FUNCS([execvpe execvP])
 
 AC_CONFIG_FILES([
 Makefile
