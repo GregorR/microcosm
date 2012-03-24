@@ -5,7 +5,7 @@
 #include "structs/struct_iovec.h"
 #include "visibility.h"
 
-VISIBLE ssize_t MC_writev(int fd, const struct MC_struct_iovec *iov, int iovcnt)
+VISIBLE ssize_t MC_writev(long fd, const struct MC_struct_iovec *iov, long iovcnt)
 {
     ssize_t ret;
     struct iovec *h_iov = alloca(sizeof(struct iovec) * iovcnt);

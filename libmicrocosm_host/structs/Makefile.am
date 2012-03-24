@@ -1,6 +1,9 @@
 AUTOMAKE_OPTIONS = foreign
 
-BUILT_SOURCES = struct_iovec.h
+BUILT_SOURCES = \
+    struct_iovec.h \
+    struct_stat.h
+
 CLEANFILES = $(BUILT_SOURCES)
 
 noinst_PROGRAMS = structcgen
