@@ -1,0 +1,11 @@
+#include <sys/wait.h>
+conv
+include <sys/wait.h>
+flags wait {
+    "WNOHANG" WNOHANG;
+    "WUNTRACED" WUNTRACED;
+    "WSTOPPED" WSTOPPED;
+    "WEXITED" WEXITED;
+    "WCONTINUED" WCONTINUED;
+    "WNOWAIT" WNOWAIT;
+};

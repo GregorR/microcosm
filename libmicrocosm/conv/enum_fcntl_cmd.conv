@@ -1,0 +1,15 @@
+#include <bits/fcntl.h>
+conv
+include <fcntl.h>
+enum fcntl_cmd {
+    "F_DUPFD" F_DUPFD;
+    "F_GETFD" F_GETFD;
+    "F_SETFD" F_SETFD;
+    "F_GETFL" F_GETFL;
+    "F_SETFL" F_SETFL;
+    "F_SETOWN" F_SETOWN;
+    "F_GETOWN" F_GETOWN;
+    "F_GETLK" F_GETLK;
+    "F_SETLK" F_SETLK;
+    "F_SETLKW" F_SETLKW;
+};

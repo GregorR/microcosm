@@ -1,0 +1,10 @@
+#include <sys/types.h>
+#include <unistd.h>
+conv
+include <sys/types.h>
+include <unistd.h>
+enum seek {
+    "SEEK_SET" SEEK_SET;
+    "SEEK_CUR" SEEK_CUR;
+    "SEEK_END" SEEK_END;
+};

@@ -1,0 +1,11 @@
+#include <bits/mman.h>
+conv
+include <sys/mman.h>
+flags mmap_prot {
+    "PROT_NONE" PROT_NONE;
+    "PROT_READ" PROT_READ;
+    "PROT_WRITE" PROT_WRITE;
+    "PROT_EXEC" PROT_EXEC;
+    "PROT_GROWSDOWN" PROT_GROWSDOWN;
+    "PROT_GROWSUP" PROT_GROWSUP;
+};

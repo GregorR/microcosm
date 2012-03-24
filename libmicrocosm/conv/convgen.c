@@ -210,8 +210,8 @@ static void handle_struct(char **sp)
     FREE_BUFFER(str);
 }
 
-static void handleFlagsDeclaration(struct Buffer_char *h2g,
-    struct Buffer_char *g2h, char *structNm, char *decl)
+static void handleEnumFlagsDeclaration(struct Buffer_char *h2g,
+    struct Buffer_char *g2h, char *structNm, char *decl, int flags)
 {
     char *name, *value, *saveptr;
     int i;
@@ -232,17 +232,29 @@ static void handleFlagsDeclaration(struct Buffer_char *h2g,
     if (!value) return;
     trimWhitespace(value);
 
-    EXPAND_BUFFER_TO(*h2g, strlen(value) + strlen(name) + 24);
-    h2g->bufused += sprintf(BUFFER_END(*h2g),
-        "if(host&%s)guest|=%s;\n",
-        name, value);
-    EXPAND_BUFFER_TO(*g2h, strlen(value) + strlen(name) + 24);
-    g2h->bufused += sprintf(BUFFER_END(*g2h),
-        "if(guest&%s)host|=%s;\n",
-        value, name);
+    printf("#define MC_%s %s\n", name, value);
+    if (flags) {
+        EXPAND_BUFFER_TO(*h2g, strlen(value) + strlen(name) + 24);
+        h2g->bufused += sprintf(BUFFER_END(*h2g),
+            "if(host&%s)guest|=%s;\n",
+            name, value);
+        EXPAND_BUFFER_TO(*g2h, strlen(value) + strlen(name) + 24);
+        g2h->bufused += sprintf(BUFFER_END(*g2h),
+            "if(guest&%s)host|=%s;\n",
+            value, name);
+    } else {
+        EXPAND_BUFFER_TO(*h2g, strlen(value) + strlen(name) + 24);
+        h2g->bufused += sprintf(BUFFER_END(*h2g),
+            "if(host==%s)guest=%s;\n",
+            name, value);
+        EXPAND_BUFFER_TO(*g2h, strlen(value) + strlen(name) + 24);
+        g2h->bufused += sprintf(BUFFER_END(*g2h),
+            "if(guest==%s)host=%s;\n",
+            value, name);
+    }
 }
 
-static void handle_flags(char **sp)
+static void handleEnumFlags(char **sp, int flags)
 {
     /* two buffers: one for h2g, one for g2h */
     struct Buffer_char h2g, g2h;
@@ -273,7 +285,7 @@ static void handle_flags(char **sp)
 
     /* get each element out of the flags */
     while (decl = getDeclaration(sp)) {
-        handleFlagsDeclaration(&h2g, &g2h, flagsNm, decl);
+        handleEnumFlagsDeclaration(&h2g, &g2h, flagsNm, decl, flags);
     }
 
     /* finish the buffers and write it all out */
@@ -290,6 +302,16 @@ static void handle_flags(char **sp)
     FREE_BUFFER(h2g);
 }
 
+static void handle_flags(char **sp)
+{
+    return handleEnumFlags(sp, 1);
+}
+
+static void handle_enum(char **sp)
+{
+    return handleEnumFlags(sp, 0);
+}
+
 static void handleCommand(char *cmd)
 {
     char *saveptr, *oper;
@@ -304,6 +326,7 @@ static void handleCommand(char *cmd)
     else OPER(include);
     else OPER(struct);
     else OPER(flags);
+    else OPER(enum);
     else {
         fprintf(stderr, "Unrecognized operation \"%s\"!\n", oper);
         exit(1);

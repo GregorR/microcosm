@@ -1,0 +1,11 @@
+#include <bits/mman.h>
+conv
+include <sys/mman.h>
+flags mmap {
+    "MAP_SHARED" MAP_SHARED;
+    "MAP_PRIVATE" MAP_PRIVATE;
+    "MAP_FIXED" MAP_FIXED;
+    "MAP_FILE" MAP_FILE;
+    "MAP_ANON" MAP_ANON;
+    "MAP_32BIT" MAP_32BIT;
+};

@@ -12,13 +12,20 @@ tlib_DATA = libmicrocosm.so libmicrocosm.so.1
 
 hostlib_SOURCES = syscall.c \
     \
-    fcntl/open.c \
+    fcntl/fcntl.c fcntl/open.c \
+    \
+    mman/mmap.c \
+    \
+    process/execve.c process/wait4.c \
     \
     stat/fstat.c stat/stat.c \
     \
     unistd/access.c unistd/close.c unistd/getcwd.c unistd/getegid.c \
-    unistd/geteuid.c unistd/getgid.c unistd/getuid.c unistd/readlink.c \
+    unistd/geteuid.c unistd/getgid.c unistd/getpid.c unistd/getuid.c \
+    unistd/lseek.c unistd/read.c unistd/readlink.c unistd/readv.c \
     unistd/setgid.c unistd/setuid.c unistd/writev.c \
+    \
+    time/gettimeofday.c \
     \
     vfs/hostfs.c vfs/vfs.c
 

@@ -9,14 +9,23 @@
 
 /* FIXME: this is a gross way to handle this */
 #define FW(nm) long MC_##nm(long, ...)
+FW(read); /* 0 */
 FW(open); /* 2 */
 FW(close); /* 3 */
 FW(stat); /* 4 */
 FW(fstat); /* 5 */
+FW(lseek); /* 8 */
+FW(mmap); /* 9 */
+FW(readv); /* 19 */
 FW(writev); /* 20 */
 FW(access); /* 21 */
+FW(getpid); /* 39 */
+FW(execve); /* 59 */
+FW(wait4); /* 61 */
+FW(fcntl); /* 72 */
 FW(getcwd); /* 79 */
 FW(readlink); /* 89 */
+FW(gettimeofday); /* 96 */
 FW(getuid); /* 102 */
 FW(getgid); /* 104 */
 FW(setuid); /* 105 */
@@ -42,14 +51,23 @@ VISIBLE long __syscall(long n, long a, long b, long c, long d, long e, long f)
             break;
 
         /* wrapped calls */
+        W(read);
         W(open);
         W(close);
         W(stat);
         W(fstat);
+        W(lseek);
+        W(mmap);
+        W(readv);
         W(writev);
         W(access);
+        W(getpid);
+        W(execve);
+        W(wait4);
+        W(fcntl);
         W(getcwd);
         W(readlink);
+        W(gettimeofday);
         W(getuid);
         W(getgid);
         W(setuid);
@@ -70,7 +88,9 @@ VISIBLE long __syscall(long n, long a, long b, long c, long d, long e, long f)
         case MC_SYS_rt_sigaction: /* 13 */
         case MC_SYS_ioctl: /* 16 */
         case MC_SYS_getrlimit: /* 97 */
+        case MC_SYS_getrusage: /* 98 */
         case MC_SYS_set_tid_address: /* 218 */
+        case MC_SYS_clock_gettime: /* 228 */
         case MC_SYS_prlimit64: /* 302 */
             return -MC_ENOSYS;
 
