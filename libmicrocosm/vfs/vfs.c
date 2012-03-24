@@ -7,7 +7,7 @@
 #include "conv/buffer.h"
 #include "vfs/vfs.h"
 
-struct MC_VFS_Mount *mounts = NULL;
+struct MC_VFS_Mount *MC_mounts = NULL;
 
 /* canonicalize a pathname (allocates!) */
 char *MC_canonicalize(struct MC_VFS_Mount **mount, const char *path)

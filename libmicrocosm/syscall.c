@@ -9,13 +9,16 @@
 
 /* FIXME: this is a gross way to handle this */
 #define FW(nm) long MC_##nm(long, ...)
+FW(open); /* 2 */
 FW(stat); /* 4 */
 FW(writev);
 FW(getcwd); /* 79 */
-FW(getuid);
-FW(getgid);
-FW(setuid);
-FW(setgid);
+FW(getuid); /* 102 */
+FW(getgid); /* 104 */
+FW(setuid); /* 105 */
+FW(setgid); /* 106 */
+FW(geteuid); /* 107 */
+FW(getegid); /* 108 */
 #undef FW
 
 /* wrapped syscalls (simple case) */
@@ -34,10 +37,8 @@ VISIBLE long __syscall(long n, long a, long b, long c, long d, long e, long f)
             fprintf(stderr, "[microcosm] Generic debug: %ld %ld %ld %ld %ld %ld!\n", a, b, c, d, e, f);
             break;
 
-        /* direct calls */
-        D(getcwd, 0);
-
         /* wrapped calls */
+        W(open);
         W(stat);
         W(writev);
         W(getcwd);
@@ -45,6 +46,8 @@ VISIBLE long __syscall(long n, long a, long b, long c, long d, long e, long f)
         W(getgid);
         W(setuid);
         W(setgid);
+        W(geteuid);
+        W(getegid);
 
         case MC_SYS_exit_group: /* 231 */
             /* generally just exit: FIXME, exit doesn't really work */

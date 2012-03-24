@@ -111,8 +111,9 @@ static char *getDeclName(char *decl, int *isArray)
     return decl + i + 1;
 }
 
-static void handleDeclaration(struct Buffer_char *str, struct Buffer_char *h2g,
-    struct Buffer_char *g2h, char *structNm, char *pureStructNm, char *decl)
+static void handleStructDeclaration(struct Buffer_char *str,
+    struct Buffer_char *h2g, struct Buffer_char *g2h, char *structNm,
+    char *pureStructNm, char *decl)
 {
     char *name;
     int isArray;
@@ -187,7 +188,7 @@ static void handle_struct(char **sp)
 
     /* get each element out of the struct */
     while (decl = getDeclaration(sp)) {
-        handleDeclaration(&str, &h2g, &g2h, structNm, pureStructNm, decl);
+        handleStructDeclaration(&str, &h2g, &g2h, structNm, pureStructNm, decl);
     }
 
     /* finish the buffers and write it all out */
@@ -203,9 +204,90 @@ static void handle_struct(char **sp)
         h2g.bufused, h2g.buf,
         g2h.bufused, g2h.buf);
 
+    free(pureStructNm);
     FREE_BUFFER(g2h);
     FREE_BUFFER(h2g);
     FREE_BUFFER(str);
+}
+
+static void handleFlagsDeclaration(struct Buffer_char *h2g,
+    struct Buffer_char *g2h, char *structNm, char *decl)
+{
+    char *name, *value, *saveptr;
+    int i;
+
+    /* get just the name part */
+    name = strtok_r(decl, whitespace, &saveptr);
+    if (!name) return;
+    trimWhitespace(name);
+
+    /* the name will be quoted */
+    while (*name && *name == '"') name++;
+    i = strlen(name)-1;
+    for (; i >= 0 && name[i] == '"'; i--)
+        name[i] = '\0';
+
+    /* get the value */
+    value = strtok_r(NULL, "", &saveptr);
+    if (!value) return;
+    trimWhitespace(value);
+
+    EXPAND_BUFFER_TO(*h2g, strlen(value) + strlen(name) + 24);
+    h2g->bufused += sprintf(BUFFER_END(*h2g),
+        "if(host&%s)guest|=%s;\n",
+        name, value);
+    EXPAND_BUFFER_TO(*g2h, strlen(value) + strlen(name) + 24);
+    g2h->bufused += sprintf(BUFFER_END(*g2h),
+        "if(guest&%s)host|=%s;\n",
+        value, name);
+}
+
+static void handle_flags(char **sp)
+{
+    /* two buffers: one for h2g, one for g2h */
+    struct Buffer_char h2g, g2h;
+
+    char *decl;
+
+    /* the flags name is everything up to a { */
+    char *flagsNm = strtok_r(NULL, "{", sp);
+
+    INIT_BUFFER(h2g);
+    INIT_BUFFER(g2h);
+
+    /* fixup the name */
+    flagsNm = trimWhitespace(flagsNm);
+    fixupStructName(flagsNm);
+
+    /* and begin the buffers */
+    EXPAND_BUFFER_TO(h2g, strlen(flagsNm) + 55);
+    h2g.bufused += sprintf(BUFFER_END(h2g),
+        "static long MC_%s_h2g(long host) {\n"
+        "long guest = 0;\n",
+        flagsNm);
+    EXPAND_BUFFER_TO(g2h, strlen(flagsNm) + 55);
+    g2h.bufused += sprintf(BUFFER_END(g2h),
+        "static long MC_%s_g2h(long guest) {\n"
+        "long host = 0;\n",
+        flagsNm);
+
+    /* get each element out of the flags */
+    while (decl = getDeclaration(sp)) {
+        handleFlagsDeclaration(&h2g, &g2h, flagsNm, decl);
+    }
+
+    /* finish the buffers and write it all out */
+    EXPAND_BUFFER_TO(h2g, 16);
+    h2g.bufused += sprintf(BUFFER_END(h2g), "return guest;\n}\n");
+    EXPAND_BUFFER_TO(g2h, 15);
+    g2h.bufused += sprintf(BUFFER_END(g2h), "return host;\n}\n");
+
+    printf("%.*s%.*s",
+        h2g.bufused, h2g.buf,
+        g2h.bufused, g2h.buf);
+
+    FREE_BUFFER(g2h);
+    FREE_BUFFER(h2g);
 }
 
 static void handleCommand(char *cmd)
@@ -221,6 +303,7 @@ static void handleCommand(char *cmd)
     }
     else OPER(include);
     else OPER(struct);
+    else OPER(flags);
     else {
         fprintf(stderr, "Unrecognized operation \"%s\"!\n", oper);
         exit(1);
@@ -231,6 +314,7 @@ int main(int argc, char **argv)
 {
     struct Buffer_char buf;
     char *cmd, *cur;
+    int started = 0;
 
     ccArgc = argc - 1;
     ccArgv = argv + 1;
@@ -249,8 +333,13 @@ int main(int argc, char **argv)
         /* skip obnoxious whitespace */
         cmd = skipWhitespace(cmd);
 
-        /* and handle it */
-        handleCommand(cmd);
+        if (!started) {
+            /* just looking for the beginning */
+            if (!strcmp(cmd, "conv")) started = 1;
+        } else {
+            /* handle it */
+            handleCommand(cmd);
+        }
     }
 
     return 0;

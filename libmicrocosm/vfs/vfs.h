@@ -9,6 +9,7 @@ struct MC_VFS_FS {
     char *name;
     void (*info)(void *, char *, int);
     int (*stat)(void *, const char *path, struct MC_struct_stat *buf);
+    int (*open)(void *, const char *path, int flags, int mode);
 };
 
 struct MC_VFS_Mount {
