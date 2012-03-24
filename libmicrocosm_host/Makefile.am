@@ -8,7 +8,8 @@ blibdir = $(libdir)
 noinst_PROGRAMS = hostlib
 blib_DATA = libmicrocosm_host.so
 
-hostlib_SOURCES = syscall.c sys/writev.c
+hostlib_SOURCES = syscall.c unistd/writev.c
+
 hostlib_CFLAGS = -fPIC -fvisibility=hidden
 hostlib_LDFLAGS = -shared -Wl,-soname,libmicrocosm_host.so
 
