@@ -1,0 +1,65 @@
+diff -r 048d1e1471b8 bfd/config.bfd
+--- a/bfd/config.bfd	Thu Jul 01 05:09:21 2010 +0000
++++ b/bfd/config.bfd	Thu Jul 01 05:10:41 2010 +0000
+@@ -494,7 +494,8 @@
+     ;;
+   i[3-7]86-*-sysv4* | i[3-7]86-*-unixware* | \
+   i[3-7]86-*-elf | i[3-7]86-*-sco3.2v5* | \
+-  i[3-7]86-*-dgux* | i[3-7]86-*-sysv5*)
++  i[3-7]86-*-dgux* | i[3-7]86-*-sysv5* | \
++  i[3-7]86-*-microcosm*)
+     targ_defvec=bfd_elf32_i386_vec
+     targ_selvecs=i386coff_vec
+     ;;
+@@ -620,6 +621,11 @@
+     targ_selvecs="bfd_elf32_i386_vec bfd_elf64_l1om_vec i386coff_vec"
+     want64=true
+     ;;
++  x86_64-*-microcosm*)
++    targ_defvec=bfd_elf64_x86_64_vec
++    targ_selvecs="bfd_elf32_i386_vec bfd_elf64_l1om_vec"
++    want64=true
++    ;;
+   x86_64-*-freebsd* | x86_64-*-kfreebsd*-gnu)
+     targ_defvec=bfd_elf64_x86_64_freebsd_vec
+     targ_selvecs="bfd_elf32_i386_freebsd_vec i386coff_vec i386pei_vec x86_64pei_vec bfd_elf32_i386_vec bfd_elf64_x86_64_vec bfd_elf64_l1om_vec bfd_elf64_l1om_freebsd_vec"
+diff -r 048d1e1471b8 config.sub
+--- a/config.sub	Thu Jul 01 05:09:21 2010 +0000
++++ b/config.sub	Thu Jul 01 05:10:41 2010 +0000
+@@ -1293,7 +1293,7 @@
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+-	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops*)
++	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -microcosm* )
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
+diff -r 048d1e1471b8 gas/configure.tgt
+--- a/gas/configure.tgt	Thu Jul 01 05:09:21 2010 +0000
++++ b/gas/configure.tgt	Thu Jul 01 05:10:41 2010 +0000
+@@ -425,6 +425,7 @@
+   *-*-xray | *-*-hms)			fmt=coff ;;
+   *-*-sim)				fmt=coff ;;
+   *-*-elf | *-*-sysv4*)			fmt=elf ;;
++  *-*-microcosm*)                       fmt=elf ;;
+   *-*-solaris*)				fmt=elf em=solaris ;;
+   *-*-aros*)				fmt=elf em=linux ;;
+   *-*-vxworks* | *-*-windiss)		fmt=elf em=vxworks ;;
+diff -r 048d1e1471b8 ld/configure.tgt
+--- a/ld/configure.tgt	Thu Jul 01 05:09:21 2010 +0000
++++ b/ld/configure.tgt	Thu Jul 01 05:10:41 2010 +0000
+@@ -241,9 +241,13 @@
+ 			esac ;;
+ i[3-7]86-*-netware)	targ_emul=i386nw ;;
+ i[3-7]86-*-elf*)	targ_emul=elf_i386 ;;
++i[3-7]86-*-microcosm*)	targ_emul=elf_i386 ;;
+ x86_64-*-elf*)		targ_emul=elf_x86_64
+ 			targ_extra_emuls="elf_i386 elf_l1om"
+ 			;;
++x86_64-*-microcosm*)    targ_emul=elf_x86_64
++                        targ_extra_emuls="elf_i386 elf_l1om"
++                        ;;
+ i[3-7]86-*-kaos*)	targ_emul=elf_i386 ;;
+ i[3-7]86-*-freebsdaout* | i[3-7]86-*-freebsd[12].* | i[3-7]86-*-freebsd[12])
+ 			targ_emul=i386bsd ;;

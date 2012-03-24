@@ -1,0 +1,124 @@
+diff --git a/config.sub b/config.sub
+--- a/config.sub
++++ b/config.sub
+@@ -1353,7 +1353,7 @@
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+-	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es*)
++	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* | -microcosm*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
+diff --git a/gcc/config.gcc b/gcc/config.gcc
+--- a/gcc/config.gcc
++++ b/gcc/config.gcc
+@@ -754,6 +754,10 @@
+     *) echo 'Unknown thread configuration for VxWorks'; exit 1 ;;
+   esac
+   ;;
++*-*-microcosm)
++  default_use_cxa_atexit=yes
++  use_gcc_stdint=wrap
++  ;;
+ *-*-elf)
+   # Assume that newlib is being used and so __cxa_atexit is provided.
+   default_use_cxa_atexit=yes
+@@ -1196,6 +1200,14 @@
+ x86_64-*-elf*)
+ 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h newlib-stdint.h i386/i386elf.h i386/x86-64.h"
+ 	;;
++i[34567]86-*-microcosm)
++        tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h newlib-stdint.h i386/microcosm.h"
++        tmake_file="${tmake_file} t-svr4"
++        ;;
++x86_64-*-microcosm*)
++        tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h newlib-stdint.h i386/x86-64.h i386/microcosm.h"
++        tmake_file="${tmake_file} t-svr4"
++        ;;
+ i[34567]86-*-freebsd*)
+ 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h ${fbsd_tm_file} i386/freebsd.h"
+ 	;;
+diff --git a/gcc/config/i386/microcosm.h b/gcc/config/i386/microcosm.h
+new file mode 100644
+--- /dev/null
++++ b/gcc/config/i386/microcosm.h
+@@ -0,0 +1,64 @@
++/* Definitions for Microcosm
++   Copyright (C) 2010, 2012 Gregor Richards
++
++This file is part of GCC.
++
++GCC is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 3, or (at your option)
++any later version.
++
++GCC is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with GCC; see the file COPYING3.  If not see
++<http://www.gnu.org/licenses/>.  */
++
++#undef  ASM_COMMENT_START
++#define ASM_COMMENT_START "#"
++
++#undef  ASM_APP_ON
++#define ASM_APP_ON "#APP\n"
++
++#undef  ASM_APP_OFF
++#define ASM_APP_OFF "#NO_APP\n"
++
++#undef  DBX_REGISTER_NUMBER
++#define DBX_REGISTER_NUMBER(n) \
++  (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
++
++#define TARGET_OS_CPP_BUILTINS()		\
++  do						\
++    {						\
++	builtin_define ("__MICROCOSM__");	\
++    }						\
++  while (0)
++
++#undef	LINK_SPEC
++#define LINK_SPEC "%{shared:-shared} \
++  %{!shared: \
++      %{!static: \
++	%{rdynamic:-export-dynamic} \
++	%{!dynamic-linker:-dynamic-linker /usr/bin/microcosm-ld}} \
++	%{static:-static}}"
++
++#undef ENDFILE_SPEC
++#define ENDFILE_SPEC "crtn.o%s"
++
++#undef STARTFILE_SPEC
++#define STARTFILE_SPEC "crti.o%s crt1.o%s"
++
++#if defined(HAVE_LD_EH_FRAME_HDR)
++#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
++#endif
++
++#ifdef HAVE_LD_AS_NEEDED
++#define USE_LD_AS_NEEDED 1
++#endif
++
++#undef	LIB_SPEC
++#define LIB_SPEC \
++  "-lc -lmicrocosm"
+diff --git a/libgcc/config.host b/libgcc/config.host
+--- a/libgcc/config.host
++++ b/libgcc/config.host
+@@ -523,6 +523,10 @@
+ x86_64-*-elf*)
+ 	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
+ 	;;
++i[34567]86-*-microcosm*)
++	;;
++x86_64-*-microcosm*)
++	;;
+ i[34567]86-*-freebsd*)
+ 	tmake_file="${tmake_file} i386/t-freebsd i386/t-crtstuff"
+ 	;;

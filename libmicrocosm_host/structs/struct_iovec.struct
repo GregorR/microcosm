@@ -1,0 +1,5 @@
+include <sys/uio.h>
+struct struct iovec {
+    void *iov_base;
+    size_t iov_len;
+};
