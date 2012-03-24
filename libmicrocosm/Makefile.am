@@ -14,10 +14,11 @@ hostlib_SOURCES = syscall.c \
     \
     fcntl/open.c \
     \
-    stat/stat.c \
+    stat/fstat.c stat/stat.c \
     \
-    unistd/getcwd.c unistd/getegid.c unistd/geteuid.c unistd/getgid.c \
-    unistd/getuid.c unistd/setgid.c unistd/setuid.c unistd/writev.c \
+    unistd/access.c unistd/close.c unistd/getcwd.c unistd/getegid.c \
+    unistd/geteuid.c unistd/getgid.c unistd/getuid.c unistd/readlink.c \
+    unistd/setgid.c unistd/setuid.c unistd/writev.c \
     \
     vfs/hostfs.c vfs/vfs.c
 

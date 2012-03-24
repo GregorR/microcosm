@@ -1,16 +1,16 @@
 #include <stdlib.h>
-#include <sys/stat.h>
+#include <unistd.h>
 
 #include "reerrno.h"
 #include "vfs/vfs.h"
 
-long MC_stat(const char *path, struct MC_struct_stat *buf)
+ssize_t MC_readlink(const char *path, char *buf, size_t bufsiz)
 {
     int ret;
     char *cpath;
     struct MC_VFS_Mount *mount;
     cpath = MC_canonicalize(&mount, path);
-    REERRNO(ret, mount->fs->stat, -1, (mount->fsData, cpath, buf));
+    REERRNO(ret, mount->fs->readlink, -1, (mount->fsData, cpath, buf, bufsiz));
     free(cpath);
     return ret;
 }

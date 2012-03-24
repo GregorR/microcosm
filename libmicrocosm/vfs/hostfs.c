@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "constructor.h"
+#include "conv/flags_access.h"
 #include "conv/flags_open.h"
 #include "conv/helpers.h"
 #include "vfs/vfs.h"
@@ -25,11 +26,23 @@ static int hostFs_open(void *ignore, const char *path, int flags, int mode)
     return open(path, hflags, mode);
 }
 
+static ssize_t hostFs_readlink(void *ignore, const char *path, char *buf, size_t bufsiz)
+{
+    return readlink(path, buf, bufsiz);
+}
+
+static int hostFs_access(void *ignore, const char *pathname, int mode)
+{
+    return access(pathname, MC_access_g2h(mode));
+}
+
 static struct MC_VFS_FS hostFs = {
     .name = "hostfs",
     .info = hostFs_info,
     .stat = hostFs_stat,
-    .open = hostFs_open
+    .open = hostFs_open,
+    .readlink = hostFs_readlink,
+    .access = hostFs_access
 };
 
 CONSTRUCTOR static void hostfsInit()

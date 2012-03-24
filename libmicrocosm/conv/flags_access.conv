@@ -1,0 +1,9 @@
+#include <unistd.h>
+conv
+include <unistd.h>
+flags access {
+    "F_OK" F_OK;
+    "R_OK" R_OK;
+    "W_OK" W_OK;
+    "X_OK" X_OK;
+};

@@ -1,6 +1,7 @@
 AUTOMAKE_OPTIONS = foreign
 
 BUILT_SOURCES = \
+    flags_access.h \
     flags_open.h \
     struct_iovec.h \
     struct_stat.h

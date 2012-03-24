@@ -1,6 +1,8 @@
 #ifndef VFS_H
 #define VFS_H
 
+#include <sys/types.h>
+
 #include "conv/struct_stat.h"
 
 #define MC_VFS_MOUNT_PATH_MAX 255
@@ -10,6 +12,8 @@ struct MC_VFS_FS {
     void (*info)(void *, char *, int);
     int (*stat)(void *, const char *path, struct MC_struct_stat *buf);
     int (*open)(void *, const char *path, int flags, int mode);
+    ssize_t (*readlink)(void *, const char *path, char *buf, size_t bufsiz);
+    int (*access)(void *, const char *pathname, int mode);
 };
 
 struct MC_VFS_Mount {
