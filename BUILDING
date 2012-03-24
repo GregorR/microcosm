@@ -3,6 +3,8 @@ https://github.com/GregorR/musl , branch 'microcosm'.
 
 To build Microcosm:
 
+0 (if necessary)) Adjust your paths (. use.sh)
+
 1) Build the cross-compiler (cd cross ; ./buildcc.sh)
 
 2) Build libmicrocosm (cd libmicrocosm ; make ; make install)
