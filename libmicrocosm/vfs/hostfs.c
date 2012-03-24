@@ -1,4 +1,6 @@
+#include <fcntl.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "constructor.h"
 #include "conv/flags_access.h"
@@ -20,6 +22,15 @@ static int hostFs_stat(void *ignore, const char *path, struct MC_struct_stat *bu
     return ret;
 }
 
+static int hostFs_lstat(void *ignore, const char *path, struct MC_struct_stat *buf)
+{
+    struct stat hbuf;
+    int ret = lstat(path, &hbuf);
+    if (ret == 0)
+        MC_struct_stat_h2g(buf, &hbuf);
+    return ret;
+}
+
 static int hostFs_open(void *ignore, const char *path, int flags, int mode)
 {
     int hflags = MC_open_g2h(flags);
@@ -36,13 +47,26 @@ static int hostFs_access(void *ignore, const char *pathname, int mode)
     return access(pathname, MC_access_g2h(mode));
 }
 
+static int hostFs_unlink(void *ignore, const char *pathname)
+{
+    return unlink(pathname);
+}
+
+static int hostFs_chmod(void *ignore, const char *path, mode_t mode)
+{
+    return chmod(path, mode);
+}
+
 static struct MC_VFS_FS hostFs = {
     .name = "hostfs",
     .info = hostFs_info,
     .stat = hostFs_stat,
+    .lstat = hostFs_lstat,
     .open = hostFs_open,
     .readlink = hostFs_readlink,
-    .access = hostFs_access
+    .access = hostFs_access,
+    .unlink = hostFs_unlink,
+    .chmod = hostFs_chmod
 };
 
 CONSTRUCTOR static void hostfsInit()

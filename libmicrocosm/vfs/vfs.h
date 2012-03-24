@@ -11,9 +11,12 @@ struct MC_VFS_FS {
     char *name;
     void (*info)(void *, char *, int);
     int (*stat)(void *, const char *path, struct MC_struct_stat *buf);
+    int (*lstat)(void *, const char *path, struct MC_struct_stat *buf);
     int (*open)(void *, const char *path, int flags, int mode);
     ssize_t (*readlink)(void *, const char *path, char *buf, size_t bufsiz);
     int (*access)(void *, const char *pathname, int mode);
+    int (*unlink)(void *, const char *pathname);
+    int (*chmod)(void *, const char *path, mode_t mode);
 };
 
 struct MC_VFS_Mount {

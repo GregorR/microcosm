@@ -18,12 +18,13 @@ hostlib_SOURCES = syscall.c \
     \
     process/execve.c process/wait4.c \
     \
-    stat/fstat.c stat/stat.c \
+    stat/chmod.c stat/fstat.c stat/lstat.c stat/stat.c stat/umask.c \
     \
-    unistd/access.c unistd/close.c unistd/getcwd.c unistd/getegid.c \
-    unistd/geteuid.c unistd/getgid.c unistd/getpid.c unistd/getuid.c \
-    unistd/lseek.c unistd/read.c unistd/readlink.c unistd/readv.c \
-    unistd/setgid.c unistd/setuid.c unistd/writev.c \
+    unistd/access.c unistd/close.c unistd/dup2.c unistd/getcwd.c \
+    unistd/getegid.c unistd/geteuid.c unistd/getgid.c unistd/getpid.c \
+    unistd/getuid.c unistd/lseek.c unistd/read.c unistd/readlink.c \
+    unistd/readv.c unistd/setgid.c unistd/setuid.c unistd/unlink.c \
+    unistd/writev.c \
     \
     time/gettimeofday.c \
     \

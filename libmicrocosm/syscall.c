@@ -14,17 +14,22 @@ FW(open); /* 2 */
 FW(close); /* 3 */
 FW(stat); /* 4 */
 FW(fstat); /* 5 */
+FW(lstat); /* 6 */
 FW(lseek); /* 8 */
 FW(mmap); /* 9 */
 FW(readv); /* 19 */
 FW(writev); /* 20 */
 FW(access); /* 21 */
+FW(dup2); /* 33 */
 FW(getpid); /* 39 */
 FW(execve); /* 59 */
 FW(wait4); /* 61 */
 FW(fcntl); /* 72 */
 FW(getcwd); /* 79 */
+FW(unlink); /* 87 */
 FW(readlink); /* 89 */
+FW(chmod); /* 90 */
+FW(umask); /* 95 */
 FW(gettimeofday); /* 96 */
 FW(getuid); /* 102 */
 FW(getgid); /* 104 */
@@ -56,17 +61,22 @@ VISIBLE long __syscall(long n, long a, long b, long c, long d, long e, long f)
         W(close);
         W(stat);
         W(fstat);
+        W(lstat);
         W(lseek);
         W(mmap);
         W(readv);
         W(writev);
         W(access);
+        W(dup2);
         W(getpid);
         W(execve);
         W(wait4);
         W(fcntl);
         W(getcwd);
+        W(unlink);
         W(readlink);
+        W(chmod);
+        W(umask);
         W(gettimeofday);
         W(getuid);
         W(getgid);
