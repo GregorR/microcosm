@@ -63,7 +63,7 @@ build() {
             CF="../configure"
         fi
         ( $CF --prefix="$PREFIX" "$@" &&
-            make $MAKEFLAGS &&
+            gmake $MAKEFLAGS &&
             touch "$BUILT" ) ||
             die "Failed to build $BD"
 
@@ -86,7 +86,7 @@ buildmake() {
             touch patched
         fi
 
-        ( make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" "$@" $MAKEFLAGS &&
+        ( gmake CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" "$@" $MAKEFLAGS &&
             touch "$BUILT" ) ||
             die "Failed to build $BD"
 
@@ -109,7 +109,7 @@ doinstall() {
             cd build"$BP" || die "Failed to cd build$BP"
         fi
 
-        ( make install "$@" &&
+        ( gmake install "$@" &&
             touch "$INSTALLED" ) ||
             die "Failed to install $BP"
 
