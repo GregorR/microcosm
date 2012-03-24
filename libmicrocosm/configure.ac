@@ -15,6 +15,18 @@ AM_INIT_AUTOMAKE
 AC_PROG_CC
 AC_PROG_CPP
 
+# Figure out the backend name and location of non-shared files
+case "$host" in
+    *-*-mingw* | \
+    *-*-cygwin*)
+        hostlib_soname=microcosm_host-1.dll
+        ;;
+    *)
+        hostlib_soname=libmicrocosm_host.so.1
+        ;;
+esac
+AC_SUBST(hostlib_soname)
+
 # Checks for libraries.
 
 # Checks for header files.
