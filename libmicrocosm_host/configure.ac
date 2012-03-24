@@ -25,6 +25,6 @@ AC_PROG_CPP
 
 AC_CONFIG_FILES([
 Makefile
-structs/Makefile
+conv/Makefile
 ])
 AC_OUTPUT

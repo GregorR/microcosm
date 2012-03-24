@@ -1,7 +1,7 @@
 #include <sys/stat.h>
 
 #include "reerrno.h"
-#include "structs/struct_stat.h"
+#include "conv/struct_stat.h"
 
 long MC_stat(const char *path, struct MC_struct_stat *buf)
 {

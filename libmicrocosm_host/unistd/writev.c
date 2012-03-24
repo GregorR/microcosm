@@ -2,7 +2,7 @@
 #include <sys/uio.h>
 
 #include "reerrno.h"
-#include "structs/struct_iovec.h"
+#include "conv/struct_iovec.h"
 #include "visibility.h"
 
 VISIBLE ssize_t MC_writev(long fd, const struct MC_struct_iovec *iov, long iovcnt)

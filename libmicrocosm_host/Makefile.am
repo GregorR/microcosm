@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = structs
+SUBDIRS = conv
 
 BUILT_SOURCES = mcsyscall.h mcerrno.h
 CLEANFILES = $(BUILT_SOURCES) libmicrocosm_host.so
