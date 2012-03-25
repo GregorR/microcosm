@@ -1,3 +1,32 @@
+if [ ! "$MICROCOSM_BASE" ]
+then
+    MICROCOSM_BASE="$PWD"
+fi
+export MICROCOSM_BASE
+
+if [ ! "$SRCDIR" ]
+then
+    SRCDIR="$MICROCOSM_BASE"
+fi
+
+if [ ! -e "$MICROCOSM_BASE/config.sh" ]
+then
+    echo 'Create a config.sh file.'
+    exit 1
+fi
+
+. "$MICROCOSM_BASE"/config.sh
+
+PATH="$PREFIX/bin:$CC_PREFIX/bin:$PATH"
+export PATH
+export TRIPLE # Needed by musl build
+
+case "$ARCH" in
+    x86_64) MUSL_ARCH=x86_64 ;;
+    *) MUSL_ARCH=i386 ;;
+esac
+export MUSL_ARCH
+
 die() {
     echo "$@"
     exit 1
@@ -30,7 +59,7 @@ patch_source() {
 
     pushd "$BD" || die "Failed to pushd $BD"
 
-    if [ ! -e patched ]
+    if [ -e "$SRCDIR/$BD"-microcosm.diff -a ! -e patched ]
     then
         patch -p1 < "$SRCDIR/$BD"-microcosm.diff || die "Failed to patch $BD"
         touch patched
@@ -80,7 +109,7 @@ buildmake() {
     then
         pushd "$BD" || die "Failed to pushd $BD"
 
-        if [ ! -e patched ]
+        if [ -e "$SRCDIR/$BD"-microcosm.diff && ! -e patched ]
         then
             patch -p1 < "$SRCDIR/$BD"-microcosm.diff || die "Failed to patch $BD"
             touch patched

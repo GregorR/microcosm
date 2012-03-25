@@ -3,12 +3,12 @@
 #
 
 # Target CPU architecture. Supported values: i386, x86_64
-ARCH = x86_64
-CROSS_COMPILE = x86_64-pc-microcosm-
+ARCH = $(MUSL_ARCH)
+CROSS_COMPILE = $(TRIPLE)-
 CC = $(CROSS_COMPILE)gcc
 
 # Installation prefix. DO NOT use /, /usr, or /usr/local !
-prefix = /opt/cross/x86_64-pc-microcosm/x86_64-pc-microcosm
+prefix = $(PREFIX)
 
 # Installation prefix for musl-gcc compiler wrapper.
 exec_prefix = /usr/local
