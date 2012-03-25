@@ -20,8 +20,8 @@ then
     autoreconf
     popd
 fi
-build build_host libmicrocosm --target="$TRIPLE"
-cp libmicrocosm/build_host/libmicrocosm.so* "$CC_PREFIX"/"$TRIPLE"/lib
+build host libmicrocosm --target="$TRIPLE"
+cp libmicrocosm/buildhost/libmicrocosm.so* "$CC_PREFIX"/"$TRIPLE"/lib
 MAKEFLAGS="$OMAKEFLAGS"
 
 # 3) Dynamic loader
@@ -30,13 +30,14 @@ buildinstall '' gelfload
 
 # 4) musl
 PREFIX="$CC_PREFIX/$TRIPLE"
-cp musl.config.mak musl/
+cp musl.config.mak musl/config.mak
+echo musl arch $MUSL_ARCH
 buildmake musl
 doinstall '' musl
 
 # 5) libmicrocosm
 PREFIX="$CC_PREFIX"
-buildinstall build libmicrocosm --target="$TRIPLE"
+buildinstall full libmicrocosm --target="$TRIPLE"
 
 # 6) Symlink wrappers
 mkdir -p "$MICROCOSM_PREFIX"/lib/microcosm

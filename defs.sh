@@ -109,7 +109,7 @@ buildmake() {
     then
         pushd "$BD" || die "Failed to pushd $BD"
 
-        if [ -e "$SRCDIR/$BD"-microcosm.diff && ! -e patched ]
+        if [ -e "$SRCDIR/$BD"-microcosm.diff -a ! -e patched ]
         then
             patch -p1 < "$SRCDIR/$BD"-microcosm.diff || die "Failed to patch $BD"
             touch patched
