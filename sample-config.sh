@@ -1,0 +1,5 @@
+MICROCOSM_PREFIX=/opt/microcosm
+ARCH=x86_64
+TRIPLE=$ARCH-pc-microcosm
+CC_PREFIX=/opt/cross/$TRIPLE
+MAKEFLAGS=-j8
