@@ -16,7 +16,7 @@ hostlib_SOURCES = syscall.c \
     \
     mman/mmap.c \
     \
-    process/execve.c process/wait4.c \
+    process/execve.c process/fork.c process/wait4.c \
     \
     stat/chmod.c stat/fstat.c stat/lstat.c stat/stat.c stat/umask.c \
     \
@@ -24,7 +24,7 @@ hostlib_SOURCES = syscall.c \
     unistd/getegid.c unistd/geteuid.c unistd/getgid.c unistd/getpid.c \
     unistd/getuid.c unistd/lseek.c unistd/read.c unistd/readlink.c \
     unistd/readv.c unistd/setgid.c unistd/setuid.c unistd/unlink.c \
-    unistd/writev.c \
+    unistd/write.c unistd/writev.c \
     \
     time/gettimeofday.c \
     \

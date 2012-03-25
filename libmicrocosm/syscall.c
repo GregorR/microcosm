@@ -10,6 +10,7 @@
 /* FIXME: this is a gross way to handle this */
 #define FW(nm) long MC_##nm(long, ...)
 FW(read); /* 0 */
+FW(write); /* 1 */
 FW(open); /* 2 */
 FW(close); /* 3 */
 FW(stat); /* 4 */
@@ -22,6 +23,7 @@ FW(writev); /* 20 */
 FW(access); /* 21 */
 FW(dup2); /* 33 */
 FW(getpid); /* 39 */
+FW(fork); /* 57 */
 FW(execve); /* 59 */
 FW(wait4); /* 61 */
 FW(fcntl); /* 72 */
@@ -57,6 +59,7 @@ VISIBLE long microcosm____syscall(long n, long a, long b, long c, long d, long e
 
         /* wrapped calls */
         W(read);
+        W(write);
         W(open);
         W(close);
         W(stat);
@@ -69,6 +72,7 @@ VISIBLE long microcosm____syscall(long n, long a, long b, long c, long d, long e
         W(access);
         W(dup2);
         W(getpid);
+        W(fork);
         W(execve);
         W(wait4);
         W(fcntl);
@@ -99,6 +103,7 @@ VISIBLE long microcosm____syscall(long n, long a, long b, long c, long d, long e
         case MC_SYS_ioctl: /* 16 */
         case MC_SYS_getrlimit: /* 97 */
         case MC_SYS_getrusage: /* 98 */
+        case MC_SYS_set_thread_area: /* 205 */
         case MC_SYS_set_tid_address: /* 218 */
         case MC_SYS_clock_gettime: /* 228 */
         case MC_SYS_prlimit64: /* 302 */
