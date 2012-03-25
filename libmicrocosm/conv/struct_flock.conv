@@ -1,9 +1,10 @@
 conv
 include <fcntl.h>
+include <sys/types.h>
 struct struct flock {
     short l_type;
     short l_whence;
-    off_t l_start;
-    off_t l_len;
-    pid_t l_pid;
+    ssize_t l_start;
+    ssize_t l_len;
+    int l_pid;
 };
