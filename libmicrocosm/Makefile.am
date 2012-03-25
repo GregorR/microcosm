@@ -43,11 +43,13 @@ mcerrno.h: target-errno.h
 @hostlib_soname@: hostlib$(EXEEXT)
 	cp -f hostlib$(EXEEXT) @hostlib_soname@
 
+TARGET_CFLAGS=-shared -nostdlib -ffreestanding -fPIC
+
 libmicrocosm.so: names.c
-	$(target)-gcc -shared -nostdlib -fPIC $< -Wl,-soname,libmicrocosm.so.1 -o $@
+	$(target)-gcc $(TARGET_CFLAGS) $< -Wl,-soname,libmicrocosm.so.1 -o $@
 
 libhost.so: empty.c
-	$(target)-gcc -shared -nostdlib -fPIC $< -Wl,-soname,libhost_@hostlib_soname@ -o $@
+	$(target)-gcc $(TARGET_CFLAGS) $< -Wl,-soname,libhost_@hostlib_soname@ -o $@
 
 libmicrocosm.so.1: empty.c libhost.so
-	$(target)-gcc -shared -nostdlib -fPIC $< libhost.so -Wl,-soname,$@ -o $@
+	$(target)-gcc $(TARGET_CFLAGS) $< libhost.so -Wl,-soname,$@ -o $@
