@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.6])
+AC_PREREQ([2.60])
 AC_INIT([libmicrocosm_host], [0], [Richards@codu.org])
 AC_CONFIG_SRCDIR([syscall.c])
 AC_CONFIG_HEADERS([config.h])

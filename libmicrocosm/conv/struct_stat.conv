@@ -2,31 +2,27 @@ conv
 include <sys/stat.h>
 include <sys/types.h>
 struct struct stat {
-    unsigned long st_dev;
-    unsigned long long st_ino;
-    unsigned long st_nlink;
-
+    long long st_dev;
+    int __st_dev_padding_a;
+    ssize_t __st_ino_truncated_a;
     unsigned int st_mode;
-    unsigned int st_uid;
-    unsigned int st_gid;
-    unsigned int    __pad0_a;
-    unsigned long st_rdev;
-    ssize_t st_size;
-    long st_blksize;
+    unsigned int st_nlink;
+    int st_uid;
+    int st_gid;
+    long long st_rdev;
+    int __st_rdev_padding_a;
+    long long st_size;
+    ssize_t st_blksize;
     long long st_blocks;
-
 #if 0
-FIXME: nested struct support
+FIXME: nexted structs
     struct timespec st_atim;
     struct timespec st_mtim;
     struct timespec st_ctim;
 #else
-    long st_atim_sec;
-    long st_atim_nsec;
-    long st_mtim_sec;
-    long st_mtim_nsec;
-    long st_ctim_sec;
-    long st_ctim_nsec;
+    ssize_t st_atim_sec; ssize_t st_atim_nsec;
+    ssize_t st_mtim_sec; ssize_t st_mtim_nsec;
+    ssize_t st_ctim_sec; ssize_t st_ctim_nsec;
 #endif
-    long __unused_a[3];
+    unsigned long long st_ino;
 };
