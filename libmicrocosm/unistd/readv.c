@@ -1,10 +1,11 @@
+#include <sys/types.h>
 #include <sys/uio.h>
 
 #include "reerrno.h"
 #include "conv/struct_iovec.h"
 #include "visibility.h"
 
-ssize_t MC_readv(long fd, const struct MC_struct_iovec *iov, long iovcnt)
+ssize_t MC_readv(ssize_t fd, const struct MC_struct_iovec *iov, ssize_t iovcnt)
 {
     ssize_t ret;
     struct iovec *h_iov = alloca(sizeof(struct iovec) * iovcnt);

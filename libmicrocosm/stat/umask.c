@@ -3,9 +3,9 @@
 
 #include "reerrno.h"
 
-long MC_umask(long mask)
+ssize_t MC_umask(ssize_t mask)
 {
-    long ret;
+    mode_t ret;
     REERRNO(ret, umask, -1, (mask));
     return ret;
 }

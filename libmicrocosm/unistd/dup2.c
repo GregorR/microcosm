@@ -1,10 +1,11 @@
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "reerrno.h"
 
-long MC_dup2(long oldfd, long newfd)
+ssize_t MC_dup2(ssize_t oldfd, ssize_t newfd)
 {
-    long ret;
+    int ret;
     REERRNO(ret, dup2, -1, (oldfd, newfd));
     return ret;
 }

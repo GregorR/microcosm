@@ -1,2 +1,4 @@
+#include <sys/types.h>
+
 /* our IDs are fake */
-long MC_getegid() { return 1; }
+ssize_t MC_getegid() { return 1; }

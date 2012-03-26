@@ -7,7 +7,7 @@
 /* FIXME: use rusage */
 /* FIXME: abstraction layer for pids */
 
-long MC_wait4(long pid, int *status, long options, void *ignored)
+ssize_t MC_wait4(ssize_t pid, int *status, ssize_t options, void *ignored)
 {
     pid_t ret;
     REERRNO(ret, waitpid, -1, (pid, status, MC_wait_g2h(options)));

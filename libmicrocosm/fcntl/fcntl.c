@@ -1,3 +1,4 @@
+#include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -7,10 +8,10 @@
 #include "mcerrno.h"
 #include "reerrno.h"
 
-long MC_fcntl(long fd, long cmd, long arg)
+ssize_t MC_fcntl(ssize_t fd, ssize_t cmd, ssize_t arg)
 {
-    long ret;
-    long hcmd = MC_fcntl_cmd_g2h(cmd);
+    int ret;
+    ssize_t hcmd = MC_fcntl_cmd_g2h(cmd);
     switch (cmd) {
         case MC_F_DUPFD:
         case MC_F_GETFD:

@@ -35,7 +35,7 @@ hostlib_LDFLAGS = -shared -Wl,-soname,@hostlib_soname@
 
 # FIXME: This is plainly wrong, but I don't know how to fix it
 mcsyscall.h: target-syscall.h
-	$(target)-gcc -E -dD $< | grep '^#[^ ]* SYS_' | sed 's/ / MC_/' > $@
+	$(target)-gcc -E -dD $< | grep '^#[^ ]* SYS_' | sed 's/ / MC_/ ; s/\([ (]\)SYS/\1MC_SYS/g' > $@
 
 mcerrno.h: target-errno.h
 	$(target)-gcc -E -dD $< | grep '#[^ ]* E' | sed 's/ / MC_/' > $@

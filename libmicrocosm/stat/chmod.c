@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include "reerrno.h"
 #include "vfs/vfs.h"
 
-long MC_chmod(const char *path, long mode)
+ssize_t MC_chmod(const char *path, ssize_t mode)
 {
     int ret;
     char *cpath;

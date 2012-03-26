@@ -4,9 +4,9 @@
 #include "reerrno.h"
 
 /* FIXME: need an abstraction layer for pids */
-long MC_getpid()
+ssize_t MC_getpid()
 {
-    long ret;
+    pid_t ret;
     REERRNO(ret, getpid, -1, ());
     return ret;
 }

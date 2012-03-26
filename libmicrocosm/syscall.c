@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
 
+#include "abi.h"
 #include "mcerrno.h"
 #include "mcsyscall.h"
 #include "reerrno.h"
 #include "visibility.h"
 
 /* FIXME: this is a gross way to handle this */
-#define FW(nm) long MC_##nm(long, ...)
+#define FW(nm) ssize_t MC_##nm(ssize_t, ...)
 FW(read); /* 0 */
 FW(write); /* 1 */
 FW(open); /* 2 */
@@ -44,9 +46,9 @@ FW(getegid); /* 108 */
 /* wrapped syscalls (simple case) */
 #define W(nm) case MC_SYS_##nm: return MC_##nm(a, b, c, d, e, f)
 
-VISIBLE long microcosm____syscall(long n, long a, long b, long c, long d, long e, long f)
+VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssize_t c, ssize_t d, ssize_t e, ssize_t f)
 {
-    long ret;
+    ssize_t ret;
 
     /* FIXME: autogen in some way */
 #ifdef MICROCOSM_DEBUG
@@ -123,7 +125,7 @@ VISIBLE long microcosm____syscall(long n, long a, long b, long c, long d, long e
     }
 }
 
-VISIBLE long microcosm____syscall_cp(long n, long a, long b, long c, long d, long e, long f)
+VISIBLE MC_ABI long microcosm____syscall_cp(long n, long a, long b, long c, long d, long e, long f)
 {
     /* FIXME: really do the _cp part */
     return microcosm____syscall(n, a, b, c, d, e, f);

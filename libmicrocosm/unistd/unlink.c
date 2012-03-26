@@ -1,12 +1,13 @@
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "reerrno.h"
 #include "vfs/vfs.h"
 
-long MC_unlink(const char *pathname)
+ssize_t MC_unlink(const char *pathname)
 {
-    long ret;
+    int ret;
     char *cpath;
     struct MC_VFS_Mount *mount;
     cpath = MC_canonicalize(&mount, pathname);

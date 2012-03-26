@@ -1,10 +1,11 @@
 #include <fcntl.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 #include "reerrno.h"
 #include "vfs/vfs.h"
 
-long MC_open(const char *path, long flags, long mode)
+ssize_t MC_open(const char *path, ssize_t flags, ssize_t mode)
 {
     int ret;
     char *cpath;

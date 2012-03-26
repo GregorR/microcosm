@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include "reerrno.h"
 #include "vfs/vfs.h"
 
-long MC_realstat(const char *path, struct MC_struct_stat *buf)
+ssize_t MC_realstat(const char *path, struct MC_struct_stat *buf)
 {
     int ret;
     char *cpath;

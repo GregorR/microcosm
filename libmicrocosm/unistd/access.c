@@ -1,12 +1,13 @@
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "reerrno.h"
 #include "vfs/vfs.h"
 
-long MC_access(const char *pathname, long mode)
+ssize_t MC_access(const char *pathname, ssize_t mode)
 {
-    long ret;
+    int ret;
     char *cpath;
     struct MC_VFS_Mount *mount;
     cpath = MC_canonicalize(&mount, pathname);

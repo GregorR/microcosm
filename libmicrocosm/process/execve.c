@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "config.h"
@@ -8,7 +9,7 @@ extern char **environ;
 
 /* FIXME: this should use VFS */
 
-long MC_execve(const char *filename, char *const argv[], char *const envp[])
+ssize_t MC_execve(const char *filename, char *const argv[], char *const envp[])
 {
     int ret;
     char const **subargv;

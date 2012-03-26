@@ -1,10 +1,11 @@
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "reerrno.h"
 
-long MC_close(long fd)
+ssize_t MC_close(ssize_t fd)
 {
-    long ret;
+    int ret;
     REERRNO(ret, close, -1, (fd));
     return ret;
 }
