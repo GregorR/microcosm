@@ -17,7 +17,7 @@ fi
 
 . "$MICROCOSM_BASE"/config.sh
 
-PATH="$PREFIX/bin:$CC_PREFIX/bin:$PATH"
+PATH="$MICROCOSM_PREFIX/bin:$CC_PREFIX/bin:$PATH"
 export PATH
 export TRIPLE # Needed by musl build
 
@@ -115,7 +115,7 @@ buildmake() {
             touch patched
         fi
 
-        ( make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" "$@" $MAKEFLAGS &&
+        ( make "$@" $MAKEFLAGS &&
             touch "$BUILT" ) ||
             die "Failed to build $BD"
 

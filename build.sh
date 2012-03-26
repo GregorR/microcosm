@@ -30,10 +30,11 @@ buildinstall '' gelfload
 
 # 4) musl
 PREFIX="$CC_PREFIX/$TRIPLE"
+export PREFIX
 cp musl.config.mak musl/config.mak
-echo musl arch $MUSL_ARCH
 buildmake musl
 doinstall '' musl
+unset PREFIX
 
 # 5) libmicrocosm
 PREFIX="$CC_PREFIX"
