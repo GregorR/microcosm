@@ -1,6 +1,6 @@
 conv
 include <sys/time.h>
 struct struct timeval {
-    long      tv_sec;
-    long tv_usec;
+    ssize_t tv_sec;
+    ssize_t tv_usec;
 };

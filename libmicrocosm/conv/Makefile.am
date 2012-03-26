@@ -7,6 +7,7 @@ BUILT_SOURCES = \
     flags_mmap.h \
     flags_mmap_prot.h \
     flags_open.h \
+    flags_stat_mode.h \
     flags_wait.h \
     struct_flock.h \
     struct_iovec.h \
@@ -19,4 +20,4 @@ noinst_PROGRAMS = convgen
 convgen_SOURCES = convgen.c
 
 %.h: %.conv convgen$(EXEEXT)
-	$(target)-gcc -E - < $< | ./convgen$(EXEEXT) $(CC) $(CFLAGS) $(LDFLAGS) -c -o /dev/null -x c - > $@
+	$(target)-gcc -E - < $< | ./convgen$(EXEEXT) $* $(CC) $(CFLAGS) $(LDFLAGS) -c -o /dev/null -x c - > $@

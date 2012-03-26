@@ -1,4 +1,4 @@
-#define _XOPEN_SOURCE
+#define _XOPEN_SOURCE 500
 
 #include <ctype.h>
 #include <stdio.h>
@@ -175,16 +175,31 @@ static void handleStructDeclaration(struct Buffer_char *str,
     struct Buffer_char *h2g, struct Buffer_char *g2h, char *structNm,
     char *pureStructNm, char *decl)
 {
-    char *name;
+    char *name, *saveptr;
     int isArray, hostSupports;
     struct CCState ccs;
+    char *flags = NULL;
+
+    /* get options */
+    while (decl[0] == '.') {
+        char *option = strtok_r(decl, whitespace, &saveptr);
+        decl = strtok_r(NULL, "", &saveptr);
+
+        if (!strncmp(option, ".flags:", 7)) {
+            flags = option + 7;
+
+        } else {
+            fprintf(stderr, "Unrecognized option %s!\n", option);
+
+        }
+    }
 
     /* our "type" handling is extremely primitive, to say the least, we only
      * care about the name and our special tags, if present */
     EXPAND_BUFFER_TO(*str, strlen(decl)+2);
     str->bufused += sprintf(BUFFER_END(*str), "%s;\n", decl);
 
-    /* FIXME: flag support, array support */
+    /* FIXME: inline struct support */
 
     /* get just the name part */
     name = getDeclName(decl, &isArray);
@@ -205,7 +220,21 @@ static void handleStructDeclaration(struct Buffer_char *str,
     }
 
     if (hostSupports) {
-        if (isArray) {
+        if (flags) {
+            /* make sure they get included */
+            printf("#include \"conv/flags_%s.h\"\n", flags);
+
+            /* perform the conversion */
+            EXPAND_BUFFER_TO(*h2g, strlen(name)*2 + strlen(flags) + 35);
+            h2g->bufused += sprintf(BUFFER_END(*h2g),
+                "guest->%s = MC_%s_h2g(host->%s);\n",
+                name, flags, name);
+            EXPAND_BUFFER_TO(*g2h, strlen(name)*2 + strlen(flags) + 35);
+            g2h->bufused += sprintf(BUFFER_END(*g2h),
+                "host->%s = MC_%s_g2h(guest->%s);\n",
+                name, flags, name);
+
+        } else if (isArray) {
             EXPAND_BUFFER_TO(*h2g, strlen(name)*6 + 106);
             h2g->bufused += sprintf(BUFFER_END(*h2g),
                 "memcpy(guest->%s, host->%s, ((sizeof(guest->%s)<sizeof(host->%s))?sizeof(guest->%s):sizeof(host->%s)));\n",
@@ -435,11 +464,11 @@ int main(int argc, char **argv)
     int started = 0, i;
 
     INIT_BUFFER(includes);
-    ccArgc = argc - 1;
-    ccArgv = argv + 1;
+    ccArgc = argc - 2;
+    ccArgv = argv + 2;
 
     /* replace potentially-problematic CC options */
-    for (i = 1; i < argc; i++) {
+    for (i = 2; i < argc; i++) {
         if (!strcmp(argv[i], "-g") ||
             !strncmp(argv[i], "-O", 2)) {
             argv[i] = "-c";
@@ -452,7 +481,12 @@ int main(int argc, char **argv)
     *BUFFER_END(buf) = '\0';
 
     /* generic header */
-    printf("/* THIS FILE IS GENERATED */\n#include <string.h>\n#include <sys/types.h>\n");
+    printf("/* THIS FILE IS GENERATED */\n"
+        "#ifndef CONV_%s_H\n"
+        "#define CONV_%s_H\n"
+        "#include <string.h>\n"
+        "#include <sys/types.h>\n",
+        argv[1], argv[1]);
 
     /* go command-by-command */
     cur = buf.buf;
@@ -468,6 +502,8 @@ int main(int argc, char **argv)
             handleCommand(cmd);
         }
     }
+
+    printf("#endif\n");
 
     return 0;
 }

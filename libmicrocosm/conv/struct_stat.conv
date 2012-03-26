@@ -5,7 +5,7 @@ struct struct stat {
     long long st_dev;
     int __st_dev_padding_a;
     ssize_t __st_ino_truncated_a;
-    unsigned int st_mode;
+    .flags:stat_mode unsigned int st_mode;
     unsigned int st_nlink;
     int st_uid;
     int st_gid;
