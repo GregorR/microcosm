@@ -10,7 +10,7 @@ noinst_PROGRAMS = hostlib
 blib_DATA = @hostlib_soname@
 tlib_DATA = libmicrocosm.so libmicrocosm.so.1
 
-hostlib_SOURCES = syscall.c \
+hostlib_SOURCES = malloc.c syscall.c \
     \
     fcntl/fcntl.c fcntl/open.c \
     \
@@ -30,7 +30,7 @@ hostlib_SOURCES = syscall.c \
     \
     vfs/hostfs.c vfs/vfs.c
 
-hostlib_CFLAGS = -fPIC -fvisibility=hidden
+hostlib_CFLAGS = -fPIC
 hostlib_LDFLAGS = -shared -Wl,-soname,@hostlib_soname@
 
 # FIXME: This is plainly wrong, but I don't know how to fix it

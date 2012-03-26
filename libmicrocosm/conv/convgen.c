@@ -432,11 +432,19 @@ int main(int argc, char **argv)
 {
     struct Buffer_char buf;
     char *cmd, *cur;
-    int started = 0;
+    int started = 0, i;
 
     INIT_BUFFER(includes);
     ccArgc = argc - 1;
     ccArgv = argv + 1;
+
+    /* replace potentially-problematic CC options */
+    for (i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "-g") ||
+            !strncmp(argv[i], "-O", 2)) {
+            argv[i] = "-c";
+        }
+    }
 
     /* read in the input */
     INIT_BUFFER(buf);

@@ -33,6 +33,16 @@ AC_SUBST(hostlib_soname)
 
 # Checks for typedefs, structures, and compiler characteristics.
 
+# Can we do -fvisibility=hidden ?
+AC_LANG([C])
+OCFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -fvisibility=hidden"
+export CFLAGS
+AC_COMPILE_IFELSE([], [], [
+    CFLAGS="$OCFLAGS"
+    export CFLAGS
+])
+
 # Checks for library functions.
 AC_CHECK_FUNCS([execvpe execvp])
 
