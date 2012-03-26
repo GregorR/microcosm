@@ -14,15 +14,8 @@ struct struct stat {
     long long st_size;
     ssize_t st_blksize;
     long long st_blocks;
-#if 0
-FIXME: nexted structs
-    struct timespec st_atim;
-    struct timespec st_mtim;
-    struct timespec st_ctim;
-#else
-    ssize_t st_atim_sec; ssize_t st_atim_nsec;
-    ssize_t st_mtim_sec; ssize_t st_mtim_nsec;
-    ssize_t st_ctim_sec; ssize_t st_ctim_nsec;
-#endif
+    .struct:struct_timespec struct MC_struct_timespec st_atim;
+    .struct:struct_timespec struct MC_struct_timespec st_mtim;
+    .struct:struct_timespec struct MC_struct_timespec st_ctim;
     unsigned long long st_ino;
 };

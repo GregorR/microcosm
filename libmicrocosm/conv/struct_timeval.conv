@@ -2,5 +2,5 @@ conv
 include <sys/time.h>
 struct struct timeval {
     ssize_t tv_sec;
-    ssize_t tv_usec;
+    int tv_usec;
 };

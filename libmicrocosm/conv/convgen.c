@@ -178,28 +178,30 @@ static void handleStructDeclaration(struct Buffer_char *str,
     char *name, *saveptr;
     int isArray, hostSupports;
     struct CCState ccs;
+
+    /* options: */
     char *flags = NULL;
+    char *ostruct = NULL;
 
     /* get options */
     while (decl[0] == '.') {
         char *option = strtok_r(decl, whitespace, &saveptr);
         decl = strtok_r(NULL, "", &saveptr);
 
-        if (!strncmp(option, ".flags:", 7)) {
+        if (!strncmp(option, ".flags:", 7))
             flags = option + 7;
 
-        } else {
-            fprintf(stderr, "Unrecognized option %s!\n", option);
+        else if (!strncmp(option, ".struct:", 8))
+            ostruct = option + 8;
 
-        }
+        else
+            fprintf(stderr, "Unrecognized option %s!\n", option);
     }
 
     /* our "type" handling is extremely primitive, to say the least, we only
      * care about the name and our special tags, if present */
     EXPAND_BUFFER_TO(*str, strlen(decl)+2);
     str->bufused += sprintf(BUFFER_END(*str), "%s;\n", decl);
-
-    /* FIXME: inline struct support */
 
     /* get just the name part */
     name = getDeclName(decl, &isArray);
@@ -233,6 +235,23 @@ static void handleStructDeclaration(struct Buffer_char *str,
             g2h->bufused += sprintf(BUFFER_END(*g2h),
                 "host->%s = MC_%s_g2h(guest->%s);\n",
                 name, flags, name);
+
+        } else if (ostruct) {
+            /* make sure they get included */
+            if (!strncmp(ostruct, "struct_", 7))
+                printf("#include \"conv/struct_%s.h\"\n", ostruct + 7);
+            else
+                printf("#include \"conv/struct_%s.h\"\n", ostruct);
+
+            /* perform the conversion */
+            EXPAND_BUFFER_TO(*h2g, strlen(ostruct) + strlen(name)*2 + 36);
+            h2g->bufused += sprintf(BUFFER_END(*h2g),
+                "MC_%s_h2g(&guest->%s, &host->%s);\n",
+                ostruct, name, name);
+            EXPAND_BUFFER_TO(*g2h, strlen(ostruct) + strlen(name)*2 + 36);
+            g2h->bufused += sprintf(BUFFER_END(*g2h),
+                "MC_%s_g2h(&host->%s, &guest->%s);\n",
+                ostruct, name, name);
 
         } else if (isArray) {
             EXPAND_BUFFER_TO(*h2g, strlen(name)*6 + 106);

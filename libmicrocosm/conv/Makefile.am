@@ -12,6 +12,7 @@ BUILT_SOURCES = \
     struct_flock.h \
     struct_iovec.h \
     struct_stat.h \
+    struct_timespec.h \
     struct_timeval.h
 
 CLEANFILES = $(BUILT_SOURCES)

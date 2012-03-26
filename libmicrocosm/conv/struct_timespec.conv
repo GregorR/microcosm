@@ -1,0 +1,6 @@
+conv
+include <sys/stat.h>
+struct struct timespec {
+    ssize_t tv_sec;
+    ssize_t tv_nsec;
+};
