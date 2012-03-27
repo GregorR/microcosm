@@ -2,6 +2,27 @@ conv
 include <sys/stat.h>
 include <sys/types.h>
 struct struct stat {
+#if 0
+    FIXME: No way to make this more portable :(
+#endif
+#if defined(__x86_64__)
+    size_t st_dev;
+    unsigned long long st_ino;
+    size_t st_nlink;
+    .flags:stat_mode unsigned int st_mode;
+    unsigned int st_uid;
+    unsigned int st_gid;
+    unsigned int __pad0_a;
+    size_t st_rdev;
+    ssize_t st_size;
+    ssize_t st_blksize;
+    long long st_blocks;
+    .struct:struct_timespec struct MC_struct_timespec st_atim;
+    .struct:struct_timespec struct MC_struct_timespec st_mtim;
+    .struct:struct_timespec struct MC_struct_timespec st_ctim;
+    ssize_t __unused_a[3];
+
+#elif defined(__i386__)
     long long st_dev;
     int __st_dev_padding_a;
     ssize_t __st_ino_truncated_a;
@@ -18,4 +39,8 @@ struct struct stat {
     .struct:struct_timespec struct MC_struct_timespec st_mtim;
     .struct:struct_timespec struct MC_struct_timespec st_ctim;
     unsigned long long st_ino;
+
+#else
+#error No struct stat for this platform
+#endif
 };

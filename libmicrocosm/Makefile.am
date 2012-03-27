@@ -18,6 +18,8 @@ hostlib_SOURCES = malloc.c syscall.c \
     \
     process/execve.c process/fork.c process/wait4.c \
     \
+    select/poll.c \
+    \
     stat/chmod.c stat/fstat.c stat/lstat.c stat/stat.c stat/umask.c \
     \
     unistd/access.c unistd/close.c unistd/dup2.c unistd/getcwd.c \

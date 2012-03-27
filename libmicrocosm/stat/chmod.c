@@ -11,7 +11,7 @@ ssize_t MC_chmod(const char *path, ssize_t mode)
     char *cpath;
     struct MC_VFS_Mount *mount;
     cpath = MC_canonicalize(&mount, path);
-    REERRNO(ret, mount->fs->chmod, -1, (mount->fsData, chmod, mode));
+    REERRNO(ret, mount->fs->chmod, -1, (mount->fsData, cpath, mode));
     free(cpath);
     return ret;
 }

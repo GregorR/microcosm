@@ -1,0 +1,7 @@
+conv
+include <poll.h>
+struct struct pollfd {
+    int fd;
+    short events;
+    short revents;
+};

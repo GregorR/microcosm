@@ -18,6 +18,7 @@ FW(close); /* 3 */
 FW(stat); /* 4 */
 FW(fstat); /* 5 */
 FW(lstat); /* 6 */
+FW(poll); /* 7 */
 FW(lseek); /* 8 */
 FW(mmap); /* 9 */
 FW(readv); /* 19 */
@@ -67,6 +68,7 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         W(stat);
         W(fstat);
         W(lstat);
+        W(poll);
         W(lseek);
         W(mmap);
         W(readv);

@@ -11,6 +11,7 @@ BUILT_SOURCES = \
     flags_wait.h \
     struct_flock.h \
     struct_iovec.h \
+    struct_pollfd.h \
     struct_stat.h \
     struct_timespec.h \
     struct_timeval.h
@@ -21,4 +22,4 @@ noinst_PROGRAMS = convgen
 convgen_SOURCES = convgen.c
 
 %.h: %.conv convgen$(EXEEXT)
-	$(target)-gcc -E - < $< | ./convgen$(EXEEXT) $* $(CC) $(CFLAGS) $(LDFLAGS) -c -o /dev/null -x c - > $@
+	$(target)-gcc -E - < $< | grep -v '^#' | ./convgen$(EXEEXT) $* $(CC) $(CFLAGS) $(LDFLAGS) -c -o /dev/null -x c - > $@
