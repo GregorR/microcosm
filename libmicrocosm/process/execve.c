@@ -29,13 +29,9 @@ ssize_t MC_execve(const char *filename, char *const argv[], char *const envp[])
 #if defined(HAVE_EXECVPE)
     REERRNO(ret, execvpe, -1, (subargv[0], subargv, envp));
 #elif defined(HAVE_EXECVP)
-    /* FIXME: This is plainly racy, but FreeBSD doesn't give me a handy option */
-    {
-        char **oldenviron = environ;
-        environ = (char **) envp;
-    	REERRNO(ret, execvp, -1, (subargv[0], subargv));
-        environ = oldenviron;
-    }
+    /* FIXME: We don't pass the environment properly, and won't until I get a
+     * proper implementation of path searching over the VFS */
+    REERRNO(ret, execvp, -1, (subargv[0], subargv));
 #else
 #error No execvpe!
 #endif
