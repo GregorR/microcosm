@@ -1,0 +1,104 @@
+.conv files are preprocessed by the Microcosm C preprocessor, so you may use
+#includes to get Microcosm macros, but not symbols. After using whatever
+#includes or #defines are necessary, put 'conv' on a line by itself to indicate
+that conversions follow (and that previous code is C from #includes). Even if
+you have no #includes, you must have a 'conv' line. The following constructions
+exist to create conversions:
+
+
+=================================================================
+include
+=================================================================
+
+This simply injects an include into the generated code. Use it to make sure
+that the necessary host type exists. e.g. a convertor for struct stat should
+include this line:
+
+include <sys/stat.h>
+
+
+=================================================================
+flags
+=================================================================
+
+The 'flags' conversion generates a convertor to and from Microcosm bitwise
+flags. Its format is as follows:
+
+flags <any name> {
+    "flag_name" value;
+    "flag_2_name" value_2;
+};
+
+The name is in quotes to avoid preprocessor expansion. As such, the common way
+to create a flags conversion is to simply include the necessary header, then
+list each option, e.g.:
+
+#include <fcntl.h>
+conv
+include <fcntl.h>
+flags open_flags {
+    "O_APPEND" O_APPEND;
+    "O_ASYNC" O_ASYNC;
+};
+
+The generated convertor will be named as specified. e.g. flags open_flags
+becomes MC_open_flags_h2g and MC_open_flags_g2h.
+
+
+=================================================================
+enum
+=================================================================
+
+The 'enum' conversion generates a convertor to and from Microcosm enumerations.
+This is nearly identical to the flags conversion, but assumes equality checks
+instead of bitwise checks. Its format is identical to the format for flags:
+
+enum <any name> {
+    "name" value;
+    "name_2" value_2;
+};
+
+
+=================================================================
+struct
+=================================================================
+
+The 'struct' conversion generates a convertor to and from Microcosm structures.
+Its format is as follows:
+
+struct <struct name (as "struct foo" or "foo_t" if typedef'd)> {
+    struct members;
+    one per semicolon;
+    .with:options for special members;
+};
+
+The generated convertor will be named as the structure, but with underscores
+instead of spaces. e.g. struct stat becomes MC_struct_stat_h2g and
+MC_struct_stat_g2h. The Microcosm structure itself adopts the name 'struct
+MC_struct_stat' in host code.
+
+The file should be named struct_<struct name without "struct ">.conv. e.g. the
+file for struct stat is named struct_stat.conv, and the file for a struct named
+tds_t would be struct_tds_t.conv.
+
+Avoid using typedef'd types for struct members, use base types where possible
+(as an exception, do not use the 'long' or 'unsigned long' type, use 'ssize_t'
+and 'size_t', respectively).
+
+Options allow you to use further convertors for individual elements of the
+structure. As usual, struct stat provides perfect examples:
+
+struct struct stat {
+    ...
+    .flags:stat_mode unsigned int st_mode;
+    ...
+    .struct:struct_timespec struct MC_struct_timespec st_atim;
+    ...
+};
+
+This struct has both a flags member, provided by conv/flags_stat_mode.conv, and
+a struct member, provided by conv/struct_timespec.conv. Note that the struct
+member is listed as the Microcosm struct type, not the host struct type; this
+is because the actual struct generated in conv/struct_stat.h must have
+precisely the Microcosm type. When these options are present, the generated
+convertor will call the secondary convertor specified for those elements.
