@@ -12,6 +12,8 @@ tlib_DATA = libmicrocosm.so libmicrocosm.so.1
 
 hostlib_SOURCES = malloc.c syscall.c \
     \
+    clock/clock_gettime.c \
+    \
     fcntl/fcntl.c fcntl/open.c \
     \
     mman/mmap.c \
@@ -26,9 +28,9 @@ hostlib_SOURCES = malloc.c syscall.c \
     \
     unistd/access.c unistd/close.c unistd/dup2.c unistd/getcwd.c \
     unistd/getegid.c unistd/geteuid.c unistd/getgid.c unistd/getpid.c \
-    unistd/getuid.c unistd/lseek.c unistd/read.c unistd/readlink.c \
-    unistd/readv.c unistd/setgid.c unistd/setuid.c unistd/unlink.c \
-    unistd/write.c unistd/writev.c \
+    unistd/getppid.c unistd/getuid.c unistd/lseek.c unistd/pipe.c unistd/read.c \
+    unistd/readlink.c unistd/readv.c unistd/setgid.c unistd/setuid.c \
+    unistd/unlink.c unistd/write.c unistd/writev.c \
     \
     vfs/hostfs.c vfs/vfs.c
 

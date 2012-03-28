@@ -1,6 +1,7 @@
 AUTOMAKE_OPTIONS = foreign
 
 BUILT_SOURCES = \
+    enum_clockid.h \
     enum_fcntl_cmd.h \
     enum_seek.h \
     flags_access.h \

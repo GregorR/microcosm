@@ -27,9 +27,11 @@ FW(writev); /* 20 */
 FW(access); /* 21 */
 FW(dup2); /* 33 */
 FW(getpid); /* 39 */
+FW(pipe); /* 42 */
 FW(fork); /* 57 */
 FW(execve); /* 59 */
 FW(wait4); /* 61 */
+FW(getppid); /* 64 */
 FW(fcntl); /* 72 */
 FW(getcwd); /* 79 */
 FW(unlink); /* 87 */
@@ -50,6 +52,7 @@ FW(_llseek);
 #ifdef MC_SYS_mmap2
 FW(mmap2); /* 192 */
 #endif
+FW(clock_gettime); /* 228 */
 #undef FW
 
 /* wrapped syscalls (simple case) */
@@ -84,9 +87,11 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         W(access);
         W(dup2);
         W(getpid);
+        W(pipe);
         W(fork);
         W(execve);
         W(wait4);
+        W(getppid);
         W(fcntl);
         W(getcwd);
         W(unlink);
@@ -107,6 +112,7 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
 #ifdef MC_SYS_mmap2
         W(mmap2);
 #endif
+        W(clock_gettime);
 
         case MC_SYS_exit_group: /* 231 */
             /* generally just exit: FIXME, exit doesn't really work */
@@ -124,7 +130,6 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         case MC_SYS_getrusage: /* 98 */
         case MC_SYS_set_thread_area: /* 205 */
         case MC_SYS_set_tid_address: /* 218 */
-        case MC_SYS_clock_gettime: /* 228 */
         case MC_SYS_prlimit64: /* 302 */
             return -MC_ENOSYS;
 
