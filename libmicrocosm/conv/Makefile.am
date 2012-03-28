@@ -14,7 +14,8 @@ BUILT_SOURCES = \
     struct_pollfd.h \
     struct_stat.h \
     struct_timespec.h \
-    struct_timeval.h
+    struct_timeval.h \
+    struct_tms.h
 
 CLEANFILES = $(BUILT_SOURCES)
 

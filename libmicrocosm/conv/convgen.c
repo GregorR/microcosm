@@ -222,6 +222,8 @@ static void handleStructDeclaration(struct Buffer_char *str,
     }
 
     if (hostSupports) {
+        printf("#define HOST_%s_HAS_%s 1\n", structNm, name);
+
         if (flags) {
             /* make sure they get included */
             printf("#include \"conv/flags_%s.h\"\n", flags);
@@ -283,6 +285,8 @@ static void handle_struct(char **sp)
      * one for g2h */
     struct Buffer_char str, h2g, g2h;
 
+    struct CCState ccs;
+    int haveStruct;
     char *decl;
 
     /* the struct name is everything up to a { */
@@ -297,6 +301,21 @@ static void handle_struct(char **sp)
     structNm = trimWhitespace(structNm);
     SF(pureStructNm, strdup, NULL, (structNm));
     fixupStructName(structNm);
+
+    /* first, figure out if we have the struct at all */
+    haveStruct = 0;
+    if (!startCC(&ccs)) {
+        fprintf(ccs.f, "%.*s"
+            "void __support_test() {\n"
+            "%s __support_test_struct;\n"
+            "}\n",
+            includes.bufused, includes.buf,
+            pureStructNm);
+        if (!endCC(&ccs))
+            haveStruct = 1;
+    }
+    if (haveStruct)
+        printf("#define HOST_HAS_%s 1\n", structNm);
 
     /* and begin the buffers */
     EXPAND_BUFFER_TO(str, strlen(structNm) + 13);
@@ -375,6 +394,8 @@ static void handleEnumFlagsDeclaration(struct Buffer_char *h2g,
     }
 
     if (hostSupports) {
+        printf("#define HOST_%s_HAS_%s 1\n", structNm, name);
+
         if (flags) {
             EXPAND_BUFFER_TO(*h2g, strlen(value) + strlen(name) + 24);
             h2g->bufused += sprintf(BUFFER_END(*h2g),

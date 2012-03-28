@@ -1,0 +1,8 @@
+conv
+include <sys/times.h>
+struct struct tms {
+    ssize_t tms_utime;
+    ssize_t tms_stime;
+    ssize_t tms_cutime;
+    ssize_t tms_cstime;
+};

@@ -22,13 +22,13 @@ hostlib_SOURCES = malloc.c syscall.c \
     \
     stat/chmod.c stat/fstat.c stat/lstat.c stat/stat.c stat/umask.c \
     \
+    time/gettimeofday.c time/times.c \
+    \
     unistd/access.c unistd/close.c unistd/dup2.c unistd/getcwd.c \
     unistd/getegid.c unistd/geteuid.c unistd/getgid.c unistd/getpid.c \
     unistd/getuid.c unistd/lseek.c unistd/read.c unistd/readlink.c \
     unistd/readv.c unistd/setgid.c unistd/setuid.c unistd/unlink.c \
     unistd/write.c unistd/writev.c \
-    \
-    time/gettimeofday.c \
     \
     vfs/hostfs.c vfs/vfs.c
 

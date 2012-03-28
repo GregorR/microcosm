@@ -36,6 +36,7 @@ FW(readlink); /* 89 */
 FW(chmod); /* 90 */
 FW(umask); /* 95 */
 FW(gettimeofday); /* 96 */
+FW(times); /* 100 */
 FW(getuid); /* 102 */
 FW(getgid); /* 104 */
 FW(setuid); /* 105 */
@@ -86,6 +87,7 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         W(chmod);
         W(umask);
         W(gettimeofday);
+        W(times);
         W(getuid);
         W(getgid);
         W(setuid);
