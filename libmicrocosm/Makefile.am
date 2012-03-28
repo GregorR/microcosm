@@ -44,6 +44,7 @@ mcerrno.h: target-errno.h
 
 @hostlib_soname@: hostlib$(EXEEXT)
 	cp -f hostlib$(EXEEXT) @hostlib_soname@
+	-chmod a+x @hostlib_soname@
 
 TARGET_CFLAGS=-shared -nostdlib -ffreestanding -fPIC
 
