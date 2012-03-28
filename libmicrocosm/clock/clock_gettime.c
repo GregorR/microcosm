@@ -10,6 +10,17 @@
 
 ssize_t MC_clock_gettime(ssize_t clk_id, struct MC_struct_timespec *tp)
 {
+#ifdef HAVE_CLOCK_GETTIME
+    /* direct implementation */
+    struct timespec htp;
+    int ret;
+    REERRNO(ret, clock_gettime, -1, (MC_clockid_g2h(clk_id), &htp));
+    if (ret >= 0)
+        MC_struct_timespec_h2g(tp, &htp);
+    return ret;
+
+#else
+    /* try to use gettimeofday */
     struct timeval tv;
     int ret;
 
@@ -24,4 +35,5 @@ ssize_t MC_clock_gettime(ssize_t clk_id, struct MC_struct_timespec *tp)
     }
 
     return ret;
+#endif
 }

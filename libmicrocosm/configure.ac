@@ -28,6 +28,7 @@ esac
 AC_SUBST(hostlib_soname)
 
 # Checks for libraries.
+AC_SEARCH_LIBS([clock_gettime], [rt])
 
 # Checks for header files.
 
@@ -45,7 +46,7 @@ AC_COMPILE_IFELSE([], [], [
 ])
 
 # Checks for library functions.
-AC_CHECK_FUNCS([execvpe execvp])
+AC_CHECK_FUNCS([clock_gettime execvp execvpe])
 
 AC_CONFIG_FILES([
 Makefile
