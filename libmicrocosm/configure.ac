@@ -32,6 +32,7 @@ AC_SUBST(hostlib_soname)
 # Checks for header files.
 
 # Checks for typedefs, structures, and compiler characteristics.
+AC_SYS_LARGEFILE
 
 # Can we do -fvisibility=hidden ?
 AC_LANG([C])

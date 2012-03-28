@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include <sys/mman.h>
 #include <sys/types.h>
 

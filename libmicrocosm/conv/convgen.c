@@ -1,5 +1,7 @@
 #define _XOPEN_SOURCE 500
 
+#include "config.h"
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

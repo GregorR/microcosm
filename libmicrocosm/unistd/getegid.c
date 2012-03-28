@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include <sys/types.h>
 
 /* our IDs are fake */

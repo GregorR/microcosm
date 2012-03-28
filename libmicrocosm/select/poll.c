@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include <poll.h>
 #include <sys/types.h>
 

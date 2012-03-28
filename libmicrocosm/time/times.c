@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include <sys/times.h>
 #include <sys/types.h>
 
