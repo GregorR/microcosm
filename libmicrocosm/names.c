@@ -6,3 +6,4 @@ void malloc() {}
 void calloc() {}
 void realloc() {}
 void free() {}
+void posix_memalign() {}
