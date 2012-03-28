@@ -43,6 +43,12 @@ FW(setuid); /* 105 */
 FW(setgid); /* 106 */
 FW(geteuid); /* 107 */
 FW(getegid); /* 108 */
+#ifdef MC_SYS__llseek
+FW(_llseek);
+#endif
+#ifdef MC_SYS_mmap2
+FW(mmap2); /* 192 */
+#endif
 #undef FW
 
 /* wrapped syscalls (simple case) */
@@ -94,6 +100,12 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         W(setgid);
         W(geteuid);
         W(getegid);
+#ifdef MC_SYS__llseek
+        W(_llseek);
+#endif
+#ifdef MC_SYS_mmap2
+        W(mmap2);
+#endif
 
         case MC_SYS_exit_group: /* 231 */
             /* generally just exit: FIXME, exit doesn't really work */
