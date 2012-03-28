@@ -3,5 +3,6 @@
 void __syscall() {}
 void __syscall_cp() {}
 void malloc() {}
+void calloc() {}
 void realloc() {}
 void free() {}
