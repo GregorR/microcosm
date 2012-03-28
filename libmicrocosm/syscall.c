@@ -5,11 +5,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "abi.h"
 #include "mcerrno.h"
 #include "mcsyscall.h"
+#include "microcosmabi.h"
 #include "reerrno.h"
-#include "visibility.h"
 
 /* FIXME: this is a gross way to handle this */
 #define FW(nm) ssize_t MC_##nm(ssize_t, ...)

@@ -320,8 +320,8 @@ static void handle_struct(char **sp)
         printf("#define HOST_HAS_%s 1\n", structNm);
 
     /* and begin the buffers */
-    EXPAND_BUFFER_TO(str, strlen(structNm) + 13);
-    str.bufused += sprintf(BUFFER_END(str), "struct MC_%s {\n", structNm);
+    EXPAND_BUFFER_TO(str, strlen(structNm) + 23);
+    str.bufused += sprintf(BUFFER_END(str), "MC_STRUCT(struct MC_%s {\n", structNm);
     EXPAND_BUFFER_TO(h2g, strlen(structNm)*2 + strlen(pureStructNm) + 99);
     h2g.bufused += sprintf(BUFFER_END(h2g),
         "static void MC_%s_h2g(struct MC_%s *guest, const %s *host) {\n"
@@ -339,8 +339,8 @@ static void handle_struct(char **sp)
     }
 
     /* finish the buffers and write it all out */
-    EXPAND_BUFFER_TO(str, 3);
-    str.bufused += sprintf(BUFFER_END(str), "};\n");
+    EXPAND_BUFFER_TO(str, 4);
+    str.bufused += sprintf(BUFFER_END(str), "});\n");
     EXPAND_BUFFER_TO(h2g, 2);
     h2g.bufused += sprintf(BUFFER_END(h2g), "}\n");
     EXPAND_BUFFER_TO(g2h, 2);
@@ -527,7 +527,8 @@ int main(int argc, char **argv)
         "#ifndef CONV_%s_H\n"
         "#define CONV_%s_H\n"
         "#include <string.h>\n"
-        "#include <sys/types.h>\n",
+        "#include <sys/types.h>\n"
+        "#include \"microcosmabi.h\"\n",
         argv[1], argv[1]);
 
     /* go command-by-command */

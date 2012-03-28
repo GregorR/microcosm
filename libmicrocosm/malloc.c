@@ -5,8 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "abi.h"
-#include "visibility.h"
+#include "microcosmabi.h"
 
 VISIBLE MC_ABI void microcosm__free(void *ptr)
 {

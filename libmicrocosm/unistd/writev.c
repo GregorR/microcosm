@@ -5,7 +5,6 @@
 
 #include "reerrno.h"
 #include "conv/struct_iovec.h"
-#include "visibility.h"
 
 ssize_t MC_writev(ssize_t fd, const struct MC_struct_iovec *iov, ssize_t iovcnt)
 {
