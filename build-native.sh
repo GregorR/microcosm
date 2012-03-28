@@ -9,6 +9,12 @@ set -e
 
 . defs.sh
 
+# 0) Mark musl as unbuilt so it'll build again
+if [ ! -e libmicrocosm/builtnhost ]
+then
+    rm -f musl/built musl/installed
+fi
+
 # 1) Cross-compiler prereqs
 PREFIX="$CC_PREFIX/$TRIPLE"
 pushd cross
