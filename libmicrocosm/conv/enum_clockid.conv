@@ -1,3 +1,4 @@
+#define _POSIX_SOURCE /* for CLOCK_* */
 #include <time.h>
 conv
 include <time.h>
