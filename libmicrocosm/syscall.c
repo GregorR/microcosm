@@ -28,6 +28,7 @@ FW(access); /* 21 */
 FW(dup2); /* 33 */
 FW(getpid); /* 39 */
 FW(pipe); /* 42 */
+FW(ioctl); /* 54 */
 FW(fork); /* 57 */
 FW(execve); /* 59 */
 FW(wait4); /* 61 */
@@ -88,6 +89,7 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         W(dup2);
         W(getpid);
         W(pipe);
+        W(ioctl);
         W(fork);
         W(execve);
         W(wait4);
@@ -125,7 +127,6 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         /* unsupported syscalls */
         case MC_SYS_brk: /* 12 */
         case MC_SYS_rt_sigaction: /* 13 */
-        case MC_SYS_ioctl: /* 16 */
         case MC_SYS_getrlimit: /* 97 */
         case MC_SYS_getrusage: /* 98 */
         case MC_SYS_set_thread_area: /* 205 */

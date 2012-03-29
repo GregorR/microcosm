@@ -16,6 +16,8 @@ hostlib_SOURCES = malloc.c syscall.c \
     \
     fcntl/fcntl.c fcntl/open.c \
     \
+    misc/ioctl.c \
+    \
     mman/mmap.c \
     \
     process/execve.c process/fork.c process/wait4.c \
