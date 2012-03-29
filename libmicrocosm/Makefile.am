@@ -37,7 +37,10 @@ hostlib_SOURCES = malloc.c syscall.c \
     vfs/hostfs.c vfs/vfs.c
 
 hostlib_CFLAGS = -fPIC
-hostlib_LDFLAGS = -shared -Wl,-soname,@hostlib_soname@
+#hostlib_LDFLAGS = -shared -Wl,-soname,@hostlib_soname@
+# FIXME: I'd like to have the soname right, although it doesn't matter. Need to
+# check in configure if we can use -soname.
+hostlib_LDFLAGS = -shared
 
 # FIXME: This is plainly wrong, but I don't know how to fix it
 mcsyscall.h: target-syscall.h
