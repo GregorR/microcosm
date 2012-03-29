@@ -211,7 +211,8 @@ static void handleStructDeclaration(struct Buffer_char *str,
     /* figure out if the host supports it */
     hostSupports = 0;
     if (!startCC(&ccs)) {
-        fprintf(ccs.f, "%.*s"
+        fprintf(ccs.f, "#define _GNU_SOURCE\n"
+            "%.*s"
             "void __support_test() {\n"
             "%s __support_test_struct;\n"
             "(void) __support_test_struct.%s;\n"
@@ -309,7 +310,8 @@ static void handle_struct(char **sp)
     /* first, figure out if we have the struct at all */
     haveStruct = 0;
     if (!startCC(&ccs)) {
-        fprintf(ccs.f, "%.*s"
+        fprintf(ccs.f, "#define _GNU_SOURCE\n"
+            "%.*s"
             "void __support_test() {\n"
             "%s __support_test_struct;\n"
             "}\n",
@@ -386,7 +388,8 @@ static void handleEnumFlagsDeclaration(struct Buffer_char *h2g,
     /* figure out if the host supports it */
     hostSupports = 0;
     if (!startCC(&ccs)) {
-        fprintf(ccs.f, "%.*s"
+        fprintf(ccs.f, "#define _GNU_SOURCE\n"
+            "%.*s"
             "void __support_test() {\n"
             "(void) %s;\n"
             "}\n",
