@@ -1,6 +1,9 @@
+#define _POSIX_C_SOURCE 200809L /* for struct timespec in struct stat */
+
 #include "config.h"
 
 #include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -10,6 +13,27 @@
 #include "conv/flags_open.h"
 #include "conv/helpers.h"
 #include "vfs/vfs.h"
+
+/* FIXME: this is a gross way to handle this */
+#if defined(__STDC__)
+# define PREDEF_STANDARD_C_1989
+# if defined(__STDC_VERSION__)
+#  define PREDEF_STANDARD_C_1990
+#  if (__STDC_VERSION__ >= 199409L)
+#   define PREDEF_STANDARD_C_1994
+#  endif
+#  if (__STDC_VERSION__ >= 199901L)
+#   define PREDEF_STANDARD_C_1999
+#  endif
+# endif
+#endif
+#ifdef PREDEF_STANDARD_C_1999
+#define STRUCT_INIT(nm, val) .nm = val
+
+#else
+#define STRUCT_INIT(nm, val) val
+
+#endif
 
 static void hostFs_info(void *ignore, char *buf, int len)
 {
@@ -61,15 +85,15 @@ static int hostFs_chmod(void *ignore, const char *path, mode_t mode)
 }
 
 static struct MC_VFS_FS hostFs = {
-    .name = "hostfs",
-    .info = hostFs_info,
-    .stat = hostFs_stat,
-    .lstat = hostFs_lstat,
-    .open = hostFs_open,
-    .readlink = hostFs_readlink,
-    .access = hostFs_access,
-    .unlink = hostFs_unlink,
-    .chmod = hostFs_chmod
+    STRUCT_INIT(name, "hostfs"),
+    STRUCT_INIT(info, hostFs_info),
+    STRUCT_INIT(stat, hostFs_stat),
+    STRUCT_INIT(lstat, hostFs_lstat),
+    STRUCT_INIT(open, hostFs_open),
+    STRUCT_INIT(readlink, hostFs_readlink),
+    STRUCT_INIT(access, hostFs_access),
+    STRUCT_INIT(unlink, hostFs_unlink),
+    STRUCT_INIT(chmod, hostFs_chmod)
 };
 
 CONSTRUCTOR static void hostfsInit()

@@ -4,6 +4,7 @@
 #include <sys/types.h>
 
 #include "conv/struct_pollfd.h"
+#include "halloca.h"
 #include "reerrno.h"
 
 ssize_t MC_poll(struct MC_struct_pollfd *fds, size_t nfds, ssize_t timeout)

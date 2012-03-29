@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 200809L /* for struct timespec in struct stat */
+
 #include "config.h"
 
 #include <fcntl.h>

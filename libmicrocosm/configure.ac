@@ -46,6 +46,7 @@ AC_COMPILE_IFELSE([], [], [
 ])
 
 # Checks for library functions.
+AC_FUNC_ALLOCA
 AC_CHECK_FUNCS([clock_gettime execvp execvpe])
 
 AC_CONFIG_FILES([

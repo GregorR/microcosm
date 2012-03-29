@@ -1,19 +1,22 @@
+#define _GNU_SOURCE /* for execvpe */
+
 #include "config.h"
 
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "halloca.h"
 #include "reerrno.h"
 
 extern char **environ;
 
 /* FIXME: this should use VFS */
 
-ssize_t MC_execve(const char *filename, char *const argv[], char *const envp[])
+ssize_t MC_execve(char *filename, char *argv[], char *envp[])
 {
     int ret;
-    char const **subargv;
+    char **subargv;
     int argc;
 
     /* extend it to microcosm -m filename argv[1..] */

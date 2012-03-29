@@ -21,19 +21,19 @@ ssize_t MC_fcntl(ssize_t fd, ssize_t cmd, ssize_t arg)
         case MC_F_GETOWN:
         case MC_F_SETOWN:
             /* generic, no conversion needed */
-            REERRNO(ret, fcntl, -1, (fd, cmd, arg));
+            REERRNO(ret, fcntl, -1, (fd, hcmd, arg));
             break;
 
         case MC_F_GETFL:
             /* convert the flags on the way out */
-            REERRNO(ret, fcntl, -1, (fd, cmd, 0));
+            REERRNO(ret, fcntl, -1, (fd, hcmd, 0));
             if (ret >= 0)
                 ret = MC_open_g2h(ret);
             break;
 
         case MC_F_SETFL:
             arg = MC_open_h2g(arg);
-            REERRNO(ret, fcntl, -1, (fd, cmd, arg));
+            REERRNO(ret, fcntl, -1, (fd, hcmd, arg));
             break;
 
         case MC_F_GETLK:
@@ -43,7 +43,7 @@ ssize_t MC_fcntl(ssize_t fd, ssize_t cmd, ssize_t arg)
             /* each of these take a lock structure */
             struct flock hflock;
             MC_struct_flock_g2h(&hflock, (void *) arg);
-            REERRNO(ret, fcntl, -1, (fd, cmd, arg));
+            REERRNO(ret, fcntl, -1, (fd, hcmd, arg));
             if (ret >= 0)
                 MC_struct_flock_h2g((void *) arg, &hflock);
             break;

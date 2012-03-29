@@ -223,6 +223,14 @@ static void handleStructDeclaration(struct Buffer_char *str,
         }
     }
 
+    if (ostruct) {
+        /* make sure they get included */
+        if (!strncmp(ostruct, "struct_", 7))
+            printf("#include \"conv/struct_%s.h\"\n", ostruct + 7);
+        else
+            printf("#include \"conv/struct_%s.h\"\n", ostruct);
+    }
+
     if (hostSupports) {
         printf("#define HOST_%s_HAS_%s 1\n", structNm, name);
 
@@ -241,12 +249,6 @@ static void handleStructDeclaration(struct Buffer_char *str,
                 name, flags, name);
 
         } else if (ostruct) {
-            /* make sure they get included */
-            if (!strncmp(ostruct, "struct_", 7))
-                printf("#include \"conv/struct_%s.h\"\n", ostruct + 7);
-            else
-                printf("#include \"conv/struct_%s.h\"\n", ostruct);
-
             /* perform the conversion */
             EXPAND_BUFFER_TO(*h2g, strlen(ostruct) + strlen(name)*2 + 36);
             h2g->bufused += sprintf(BUFFER_END(*h2g),
@@ -334,7 +336,7 @@ static void handle_struct(char **sp)
         structNm, pureStructNm, structNm);
 
     /* get each element out of the struct */
-    while (decl = getDeclaration(sp)) {
+    while ((decl = getDeclaration(sp))) {
         handleStructDeclaration(&str, &h2g, &g2h, structNm, pureStructNm, decl);
     }
 
@@ -450,7 +452,7 @@ static void handleEnumFlags(char **sp, int flags)
         flagsNm);
 
     /* get each element out of the flags */
-    while (decl = getDeclaration(sp)) {
+    while ((decl = getDeclaration(sp))) {
         handleEnumFlagsDeclaration(&h2g, &g2h, flagsNm, decl, flags);
     }
 
@@ -470,12 +472,12 @@ static void handleEnumFlags(char **sp, int flags)
 
 static void handle_flags(char **sp)
 {
-    return handleEnumFlags(sp, 1);
+    handleEnumFlags(sp, 1);
 }
 
 static void handle_enum(char **sp)
 {
-    return handleEnumFlags(sp, 0);
+    handleEnumFlags(sp, 0);
 }
 
 static void handleCommand(char *cmd)
@@ -533,7 +535,7 @@ int main(int argc, char **argv)
 
     /* go command-by-command */
     cur = buf.buf;
-    while (cmd = getCommand(&cur)) {
+    while ((cmd = getCommand(&cur))) {
         /* skip obnoxious whitespace */
         cmd = skipWhitespace(cmd);
 

@@ -1,9 +1,17 @@
+#ifdef __linux__
+#define _GNU_SOURCE /* for syscall() */
+#endif
+
 #include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#ifdef __linux__
+#include <sys/syscall.h>
+#endif
 
 #include "mcerrno.h"
 #include "mcsyscall.h"
@@ -69,7 +77,7 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
 #endif
     switch (n) {
         case -1:
-            fprintf(stderr, "[microcosm] Generic debug: %ld %ld %ld %ld %ld %ld!\n", a, b, c, d, e, f);
+            fprintf(stderr, "[microcosm] Generic debug: %ld %ld %ld %ld %ld %ld!\n", (long) a, (long) b, (long) c, (long) d, (long) e, (long) f);
             break;
 
         /* wrapped calls */
@@ -135,20 +143,22 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
             return -MC_ENOSYS;
 
         default:
-            fprintf(stderr, "[microcosm] Unsupported syscall %ld.\n", n);
+            fprintf(stderr, "[microcosm] Unsupported syscall %ld.\n", (long) n);
 #ifdef __linux__
             ret = syscall(n, a, b, c, d, e, f);
             if (ret == -1) ret = -errno;
-            fprintf(stderr, "[microcosm] %ld(%lX, %lX, %lX, %lX, %lX, %lX) = %lX\n", n, a, b, c, d, e, f, ret);
+            fprintf(stderr, "[microcosm] %ld(%lX, %lX, %lX, %lX, %lX, %lX) = %lX\n", (long) n, (long) a, (long) b, (long) c, (long) d, (long) e, (long) f, (long) ret);
             return ret;
 #else
             fprintf(stderr, "[microcosm] Returning ENOSYS.\n");
             return -MC_ENOSYS;
 #endif
     }
+
+    return -MC_ENOSYS;
 }
 
-VISIBLE MC_ABI long microcosm____syscall_cp(long n, long a, long b, long c, long d, long e, long f)
+VISIBLE MC_ABI ssize_t microcosm____syscall_cp(ssize_t n, ssize_t a, ssize_t b, ssize_t c, ssize_t d, ssize_t e, ssize_t f)
 {
     /* FIXME: really do the _cp part */
     return microcosm____syscall(n, a, b, c, d, e, f);
