@@ -47,6 +47,8 @@ AC_COMPILE_IFELSE([], [], [
 
 # Checks for library functions.
 AC_FUNC_ALLOCA
+_AC_FUNC_MALLOC_IF([AC_DEFINE([HAVE_GOOD_MALLOC], 1, [Define if malloc(0) is non-NULL])], [])
+_AC_FUNC_REALLOC_IF([AC_DEFINE([HAVE_GOOD_REALLOC], 1, [Define if realloc(?, 0) is non-NULL])], [])
 AC_CHECK_FUNCS([clock_gettime execvp execvpe])
 
 AC_CONFIG_FILES([
