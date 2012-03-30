@@ -30,6 +30,7 @@ FW(lstat); /* 6 */
 FW(poll); /* 7 */
 FW(lseek); /* 8 */
 FW(mmap); /* 9 */
+FW(mprotect); /* 10 */
 FW(readv); /* 19 */
 FW(writev); /* 20 */
 FW(access); /* 21 */
@@ -37,6 +38,7 @@ FW(dup2); /* 33 */
 FW(getpid); /* 39 */
 FW(pipe); /* 42 */
 FW(ioctl); /* 54 */
+FW(clone); /* 56 */
 FW(fork); /* 57 */
 FW(execve); /* 59 */
 FW(wait4); /* 61 */
@@ -91,6 +93,7 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         W(poll);
         W(lseek);
         W(mmap);
+        W(mprotect);
         W(readv);
         W(writev);
         W(access);
@@ -98,6 +101,7 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         W(getpid);
         W(pipe);
         W(ioctl);
+        W(clone);
         W(fork);
         W(execve);
         W(wait4);
@@ -126,7 +130,7 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
 
         case MC_SYS_exit_group: /* 231 */
             /* generally just exit: FIXME, exit doesn't really work */
-            _exit(a);
+            exit(a);
             abort();
             *((int *) 0) = 0;
             while (1);
@@ -135,6 +139,7 @@ VISIBLE MC_ABI ssize_t microcosm____syscall(ssize_t n, ssize_t a, ssize_t b, ssi
         /* unsupported syscalls */
         case MC_SYS_brk: /* 12 */
         case MC_SYS_rt_sigaction: /* 13 */
+        case MC_SYS_rt_sigprocmask: /* 14 */
         case MC_SYS_getrlimit: /* 97 */
         case MC_SYS_getrusage: /* 98 */
         case MC_SYS_set_thread_area: /* 205 */

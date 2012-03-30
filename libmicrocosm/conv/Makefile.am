@@ -6,6 +6,7 @@ BUILT_SOURCES = \
     enum_ioctl_request.h \
     enum_seek.h \
     flags_access.h \
+    flags_clone.h \
     flags_mmap.h \
     flags_mmap_prot.h \
     flags_open.h \

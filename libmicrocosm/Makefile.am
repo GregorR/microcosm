@@ -18,13 +18,15 @@ hostlib_SOURCES = malloc.c syscall.c \
     \
     misc/ioctl.c \
     \
-    mman/mmap.c \
+    mman/mmap.c mman/mprotect.c \
     \
     process/execve.c process/fork.c process/wait4.c \
     \
     select/poll.c \
     \
     stat/chmod.c stat/fstat.c stat/lstat.c stat/stat.c stat/umask.c \
+    \
+    thread/clone.c \
     \
     time/gettimeofday.c time/times.c \
     \
