@@ -26,6 +26,12 @@ MAKEFLAGS="$OMAKEFLAGS"
 
 # 3) Dynamic loader
 PREFIX="$MICROCOSM_PREFIX"
+if [ ! -e gelfload/configure ]
+then
+    pushd gelfload
+    autoreconf
+    popd
+fi
 buildinstall '' gelfload
 
 # 4) musl
