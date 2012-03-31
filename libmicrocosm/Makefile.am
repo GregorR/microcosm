@@ -58,10 +58,10 @@ mcerrno.h: target-errno.h
 TARGET_CFLAGS=-shared -nostdlib -ffreestanding -fPIC
 
 libmicrocosm.so: names.c
-	$(target)-gcc $(TARGET_CFLAGS) $< -Wl,-soname,libmicrocosm.so.1 -o $@
+	$(CC_FOR_TARGET) $(TARGET_CFLAGS) $< -Wl,-soname,libmicrocosm.so.1 -o $@
 
 libhost.so: empty.c
-	$(target)-gcc $(TARGET_CFLAGS) $< -Wl,-soname,libhost_@hostlib_soname@ -o $@
+	$(CC_FOR_TARGET) $(TARGET_CFLAGS) $< -Wl,-soname,libhost_@hostlib_soname@ -o $@
 
 libmicrocosm.so.1: empty.c libhost.so
-	$(target)-gcc $(TARGET_CFLAGS) $< libhost.so -Wl,-soname,$@ -o $@
+	$(CC_FOR_TARGET) $(TARGET_CFLAGS) $< libhost.so -Wl,-soname,$@ -o $@

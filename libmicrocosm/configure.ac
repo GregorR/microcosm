@@ -15,6 +15,9 @@ AM_INIT_AUTOMAKE
 AC_PROG_CC
 AC_PROG_CPP
 
+AC_ARG_VAR([CC_FOR_TARGET], [Target C compiler])
+AC_CHECK_TARGET_TOOLS([CC_FOR_TARGET], [gcc cc])
+
 # Figure out the backend name and location of non-shared files
 case "$host" in
     *-*-mingw* | \

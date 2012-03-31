@@ -26,4 +26,4 @@ noinst_PROGRAMS = convgen
 convgen_SOURCES = convgen.c
 
 %.h: %.conv convgen$(EXEEXT)
-	$(target)-gcc -E - < $< | grep -v '^#' | ./convgen$(EXEEXT) $* $(CC) $(CFLAGS) $(LDFLAGS) -c -o /dev/null -x c - > $@
+	$(CC_FOR_TARGET) -E - < $< | grep -v '^#' | ./convgen$(EXEEXT) $* $(CC) $(CFLAGS) $(LDFLAGS) -c -o /dev/null -x c - > $@
