@@ -46,10 +46,10 @@ hostlib_LDFLAGS = -shared
 
 # FIXME: This is plainly wrong, but I don't know how to fix it
 mcsyscall.h: target-syscall.h
-	$(target)-gcc -E -dD $< | grep '^#[^ ]* SYS_' | sed 's/ / MC_/ ; s/\([ (]\)SYS/\1MC_SYS/g' > $@
+	$(target_alias)-gcc -E -dD $< | grep '^#[^ ]* SYS_' | sed 's/ / MC_/ ; s/\([ (]\)SYS/\1MC_SYS/g' > $@
 
 mcerrno.h: target-errno.h
-	$(target)-gcc -E -dD $< | grep '#[^ ]* E' | sed 's/ / MC_/' > $@
+	$(target_alias)-gcc -E -dD $< | grep '#[^ ]* E' | sed 's/ / MC_/' > $@
 
 @hostlib_soname@: hostlib$(EXEEXT)
 	cp -f hostlib$(EXEEXT) @hostlib_soname@
