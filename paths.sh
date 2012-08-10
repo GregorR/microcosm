@@ -1,17 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 if [ ! "$MICROCOSM_BASE" ]
 then
-    MICROCOSM_BASE="$PWD"
-fi
-export MICROCOSM_BASE
-
-if [ ! -e "$MICROCOSM_BASE/config.sh" ]
-then
-    echo 'Create a config.sh file.'
-    exit 1
+    MICROCOSM_BASE=`dirname "$0"`
 fi
 
-. "$MICROCOSM_BASE"/config.sh
+# Fail on any command failing, show commands:
+set -ex
+
+. "$MICROCOSM_BASE"/defs.sh
 
 echo "$MICROCOSM_PREFIX"/bin
 echo "$CC_PREFIX"/bin

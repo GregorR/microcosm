@@ -1,46 +1,50 @@
-#!/bin/bash -x
+#!/bin/sh
 
-# Fail on any command failing
-set -e
+if [ ! "$MICROCOSM_BASE" ]
+then
+    MICROCOSM_BASE=`dirname "$0"`
+fi
 
-. defs.sh
+# Fail on any command failing, show commands:
+set -ex
+
+. "$MICROCOSM_BASE"/defs.sh
 
 # 1) Cross-compiler
-pushd cross
-./buildcc.sh
-popd
+"$MICROCOSM_BASE"/buildcc.sh
 
 # 2) Host components of libmicrocosm
 PREFIX="$CC_PREFIX"
 OMAKEFLAGS="$MAKEFLAGS"
 MAKEFLAGS="$MAKEFLAGS libmicrocosm.so libmicrocosm.so.1"
-if [ ! -e libmicrocosm/configure ]
+if [ ! -e "$MICROCOSM_BASE"/libmicrocosm/configure ]
 then
-    pushd libmicrocosm
+    (
+    cd "$MICROCOSM_BASE"/libmicrocosm
     autoreconf
-    popd
+    )
 fi
+[ ! -e libmicrocosm ] && ln -s "$MICROCOSM_BASE"/libmicrocosm .
 build host libmicrocosm --target="$TRIPLE"
 cp libmicrocosm/buildhost/libmicrocosm.so* "$CC_PREFIX"/"$TRIPLE"/lib
 MAKEFLAGS="$OMAKEFLAGS"
 
 # 3) Dynamic loader
 PREFIX="$MICROCOSM_PREFIX"
-if [ ! -e gelfload/configure ]
+if [ ! -e "$MICROCOSM_BASE"/gelfload/configure ]
 then
-    pushd gelfload
+    (
+    cd "$MICROCOSM_BASE"/gelfload
     autoreconf
-    popd
+    )
 fi
+[ ! -e gelfload ] && ln -s "$MICROCOSM_BASE"/gelfload .
 buildinstall '' gelfload
 
 # 4) musl
 PREFIX="$CC_PREFIX/$TRIPLE"
-export PREFIX
-cp musl.config.mak musl/config.mak
-buildmake musl
-doinstall '' musl
-unset PREFIX
+[ ! -e musl ] && ln -s "$MICROCOSM_BASE"/musl .
+buildinstall '' musl CC="$TRIPLE-gcc"
 
 # 5) libmicrocosm
 PREFIX="$CC_PREFIX"

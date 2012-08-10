@@ -1,29 +1,37 @@
-#!/bin/bash -x
+#!/bin/sh
 
-. defs.sh
+if [ ! "$MICROCOSM_BASE" ]
+then
+    MICROCOSM_BASE=`dirname "$0"`
+fi
+
+# Show commands:
+set -x
+
+. "$MICROCOSM_BASE"/defs.sh
 
 # 1) Cross-compiler
-pushd cross || die 'Failed to pushd cross'
-rm -rf binutils-*/ gcc-*/ gmp-*/ mpfr-*/ mpc-*/
-popd || die 'Failed to popd'
+#rm -rf binutils-*/ gcc-*/ gmp-*/ mpfr-*/ mpc-*/
 
 # 2) Host components of libmicrocosm
-rm -rf libmicrocosm/buil{d,t}host libmicrocosm/installedhost
+rm -rf libmicrocosm/buildhost libmicrocosm/builthost libmicrocosm/installedhost
 
 # 3) Dynamic loader
-pushd gelfload || die 'Failed to pushd gelfload'
+(
+cd gelfload
 make distclean
-popd || die 'Failed to popd'
-rm -f gelfload/{built,installed}
+)
+rm -f gelfload/built gelfload/installed
 
 # 4) musl
-pushd musl || die 'Failed to pushd musl'
+(
+cd musl
 make clean
-popd
-rm -f musl/{built,installed}
+)
+rm -f musl/built musl/installed
 
 # 5) libmicrocosm
-rm -rf libmicrocosm/buil{d,t}full libmicrocosm/installedfull
-rm -rf libmicrocosm/buil{d,t}nhost libmicrocosm/installednhost
+rm -rf libmicrocosm/buildfull libmicrocosm/builtfull libmicrocosm/installedfull
+rm -rf libmicrocosm/buildnhost libmicrocosm/builtnhost libmicrocosm/installednhost
 
 echo 'Done!'
