@@ -55,5 +55,6 @@ buildinstall full libmicrocosm --target="$TRIPLE"
 # 6) Symlink wrappers
 mkdir -p "$MICROCOSM_PREFIX"/lib/microcosm
 ln -sf "$CC_PREFIX"/"$TRIPLE"/lib/lib*.so* "$MICROCOSM_PREFIX"/lib/microcosm/
+ln -sf "$CC_PREFIX"/lib/libmicrocosm*.so* "$MICROCOSM_PREFIX"/lib
 
 echo 'Done!'
