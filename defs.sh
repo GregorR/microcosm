@@ -64,6 +64,7 @@ semilndir() {
     (
     LNDIR_TARGET="$PWD"
     cd "$1" || exit 1
+    [ "$LNDIR_TARGET" = "$PWD" ] && exit 0
     find . -type d -exec mkdir -m 0755 -p "$LNDIR_TARGET"'/{}' ';'
     find . '(' -type f -o -type l ')' -exec ln -s "$PWD"'/{}' "$LNDIR_TARGET"'/{}' ';'
     )
