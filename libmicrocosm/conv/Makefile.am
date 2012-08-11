@@ -11,13 +11,17 @@ BUILT_SOURCES = \
     flags_mmap_prot.h \
     flags_open.h \
     flags_stat_mode.h \
+    flags_tcflag.h \
     flags_wait.h \
+    struct_dirent.h \
     struct_flock.h \
     struct_iovec.h \
     struct_pollfd.h \
     struct_stat.h \
+    struct_termios.h \
     struct_timespec.h \
     struct_timeval.h \
+    struct_winsize.h \
     struct_tms.h
 
 CLEANFILES = $(BUILT_SOURCES)

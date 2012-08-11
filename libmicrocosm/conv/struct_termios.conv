@@ -1,0 +1,12 @@
+conv
+include <termios.h>
+struct struct termios {
+    .flags:tcflag unsigned int c_iflag;
+    .flags:tcflag unsigned int c_oflag;
+    .flags:tcflag unsigned int c_cflag;
+    .flags:tcflag unsigned int c_lflag;
+    unsigned char c_line;
+    unsigned char c_cc[32];
+    unsigned int __c_ispeed;
+    unsigned int __c_ospeed;
+};

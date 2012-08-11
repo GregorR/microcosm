@@ -10,7 +10,7 @@ noinst_PROGRAMS = hostlib
 blib_DATA = @hostlib_soname@
 tlib_DATA = libmicrocosm.so libmicrocosm.so.1
 
-hostlib_SOURCES = malloc.c syscall.c \
+hostlib_SOURCES = dirent.c malloc.c syscall.c \
     \
     clock/clock_gettime.c \
     \
