@@ -10,6 +10,8 @@ set -ex
 
 . "$MICROCOSM_BASE"/defs.sh
 
+[ ! -e scripts ] && ln -s "$MICROCOSM_BASE"/scripts .
+
 # 1) Cross-compiler
 "$MICROCOSM_BASE"/buildcc.sh
 
@@ -24,7 +26,7 @@ then
     autoreconf
     )
 fi
-[ ! -e libmicrocosm ] && ln -s "$MICROCOSM_BASE"/libmicrocosm .
+linkdirs "$MICROCOSM_BASE"/libmicrocosm libmicrocosm
 build host libmicrocosm --target="$TRIPLE"
 cp libmicrocosm/buildhost/libmicrocosm.so* "$CC_PREFIX"/"$TRIPLE"/lib
 MAKEFLAGS="$OMAKEFLAGS"
@@ -38,12 +40,12 @@ then
     autoreconf
     )
 fi
-[ ! -e gelfload ] && ln -s "$MICROCOSM_BASE"/gelfload .
+linkdirs "$MICROCOSM_BASE"/gelfload gelfload
 buildinstall '' gelfload
 
 # 4) musl
 PREFIX="$CC_PREFIX/$TRIPLE"
-[ ! -e musl ] && ln -s "$MICROCOSM_BASE"/musl .
+linkdirs "$MICROCOSM_BASE"/musl musl
 buildinstall '' musl CC="$TRIPLE-gcc"
 
 # 5) libmicrocosm

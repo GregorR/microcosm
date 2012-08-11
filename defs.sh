@@ -58,3 +58,25 @@ fi
 
 PATH="$MICROCOSM_PREFIX/bin:$PATH"
 export PATH
+
+# Something like lndir
+semilndir() {
+    (
+    LNDIR_TARGET="$PWD"
+    cd "$1" || exit 1
+    find . -type d -exec mkdir -m 0755 -p "$LNDIR_TARGET"'/{}' ';'
+    find . '(' -type f -o -type l ')' -exec ln -s "$PWD"'/{}' "$LNDIR_TARGET"'/{}' ';'
+    )
+}
+
+linkdirs() {
+    if [ ! -e "$2/linked" ]
+    then
+        mkdir -p "$2"
+        (
+        cd "$2"
+        semilndir "$1"
+        touch linked
+        )
+    fi
+}
