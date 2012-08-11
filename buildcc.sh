@@ -1,5 +1,5 @@
 #!/bin/sh
-# Build a cross-compiler
+# Build a cross compiler
 # 
 # Copyright (C) 2012 Gregor Richards
 # 
