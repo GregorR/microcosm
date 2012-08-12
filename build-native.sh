@@ -45,6 +45,9 @@ buildinstall n1 binutils-$BINUTILS_VERSION --host=$TRIPLE --target=$TRIPLE \
 fetchextract http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VERSION/ gcc-$GCC_VERSION .tar.bz2
 buildinstall n1 gcc-$GCC_VERSION --host=$TRIPLE --target=$TRIPLE \
     --enable-languages=c --with-sysroot="$MICROCOSM_NATIVE_PREFIX"
+# un"fix" headers
+rm -rf "$MICROCOSM_NATIVE_PREFIX/lib/gcc/$TRIPLE"/*/include-fixed/ \
+    "$MICROCOSM_NATIVE_PREFIX/lib/gcc/$TRIPLE"/*/include/stddef.h
 
 # 3) Host components of libmicrocosm
 PREFIX="$CC_PREFIX"

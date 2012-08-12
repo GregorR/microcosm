@@ -49,3 +49,6 @@ buildinstall 1 gcc-$GCC_VERSION --target=$TRIPLE \
     --disable-shared --disable-libmudflap --disable-libgomp \
     --disable-tls \
     $GCC_BOOTSTRAP_CONFFLAGS
+
+# un"fix" headers
+rm -rf "$CC_PREFIX/lib/gcc/$TRIPLE"/*/include-fixed/ "$CC_PREFIX/lib/gcc/$TRIPLE"/*/include/stddef.h
