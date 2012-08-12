@@ -34,7 +34,7 @@ then
 fi
 
 # 1) Cross-compiler prereqs
-"$MICROCOSM_BASE"/musl-cross/extra/build-gcc-deps.sh
+"$MICROCOSM_BASE"/build-gcc-deps.sh
 
 # 2) Cross-compiler
 PREFIX="$MICROCOSM_NATIVE_PREFIX"
