@@ -7,3 +7,12 @@ void calloc() {}
 void realloc() {}
 void free() {}
 void posix_memalign() {}
+void closedir() {}
+void dirfd() {}
+void fdopendir() {}
+void opendir() {}
+void readdir() {}
+void readdir_r() {}
+void rewinddir() {}
+void seekdir() {}
+void telldir() {}
