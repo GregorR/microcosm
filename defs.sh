@@ -26,6 +26,13 @@ then
     MUSL_CC_BASE="$MICROCOSM_BASE"
 fi
 
+if [ ! -e config.sh ]
+then
+    echo 'Create a config.sh file.'
+    exit 1
+fi
+. ./config.sh
+
 # Auto-detect an ARCH if not specified
 if [ -z "$ARCH" ]
 then
