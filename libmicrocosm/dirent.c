@@ -1,6 +1,10 @@
 #define _POSIX_C_SOURCE 200809L /* for dirfd, fdopendir */
 #define _XOPEN_SOURCE 500 /* for seekdir, telldir */
 
+/* Due to a bug on FreeBSD, it's impossible to see dirfd with any correct
+ * visibility flags */
+#define __BSD_VISIBLE 1
+
 #include "config.h"
 
 #include <dirent.h>
@@ -18,7 +22,7 @@ VISIBLE MC_ABI int microcosm__closedir(void *dirp)
 
 VISIBLE MC_ABI int microcosm__dirfd(void *dirp)
 {
-    return dirfd(dirp);
+    return dirfd((DIR *) dirp);
 }
 
 VISIBLE MC_ABI void *microcosm__fdopendir(int fd)
