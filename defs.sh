@@ -63,6 +63,18 @@ fi
 # Include musl-cross's defs.sh
 . "$MUSL_CC_BASE/musl-cross/defs.sh"
 
+# Use ginstall if it exists
+if [ -z "$INSTALL_PROG" ]
+then
+    ginstall --help > /dev/null 2>&1
+    if [ "$?" = "0" ]
+    then
+        INSTALL_PROG=ginstall
+    else
+        INSTALL_PROG=make
+    fi
+fi
+
 PATH="$MICROCOSM_PREFIX/bin:$PATH"
 export PATH
 
