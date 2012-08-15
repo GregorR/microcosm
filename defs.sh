@@ -66,13 +66,8 @@ fi
 # Use ginstall if it exists
 if [ -z "$INSTALL_PROG" ]
 then
-    ginstall --help > /dev/null 2>&1
-    if [ "$?" = "0" ]
-    then
-        INSTALL_PROG=ginstall
-    else
-        INSTALL_PROG=make
-    fi
+    INSTALL_PROG=install
+    ginstall --help > /dev/null 2>&1 && INSTALL_PROG=ginstall
 fi
 
 PATH="$MICROCOSM_PREFIX/bin:$PATH"
