@@ -39,24 +39,56 @@ AC_SEARCH_LIBS([clock_gettime], [rt])
 AC_SYS_LARGEFILE
 
 # Can we do -std=c99 ?
-AC_LANG([C])
-OCFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -std=c99"
-export CFLAGS
-AC_COMPILE_IFELSE(AC_LANG_SOURCE([int foo;]), [], [
+AC_ARG_ENABLE(
+    [std-c99],
+    [AS_HELP_STRING(
+        [--enable-std-c99],
+        [Use -std=c99 compiler option [check]])],
+    [use_std_c99=$enableval],
+    [use_std_c99=check])
+if test x$use_std_c99 = xcheck; then
+    AC_LANG([C])
+    OCFLAGS="$CFLAGS"
+    CFLAGS="$CFLAGS -std=c99"
+    export CFLAGS
+    AC_COMPILE_IFELSE([AC_LANG_SOURCE([int foo;])], [
+        use_std_c99=yes
+    ], [
+        use_std_c99=no
+    ])
     CFLAGS="$OCFLAGS"
     export CFLAGS
-])
+fi
+if test x$use_std_c99 = xyes; then
+    CFLAGS="$CFLAGS -std=c99"
+    export CFLAGS
+fi
 
 # Can we do -fvisibility=hidden ?
-AC_LANG([C])
-OCFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -fvisibility=hidden"
-export CFLAGS
-AC_COMPILE_IFELSE(AC_LANG_SOURCE([int foo;]), [], [
+AC_ARG_ENABLE(
+    [visibility-hidden],
+    [AS_HELP_STRING(
+        [--enable-visibility-hidden],
+        [Use -fvisibility=hidden compiler option [check]])],
+    [use_visibility_hidden=$enableval],
+    [use_visibility_hidden=check])
+if test x$use_visibility_hidden = xcheck; then
+    AC_LANG([C])
+    OCFLAGS="$CFLAGS"
+    CFLAGS="$CFLAGS -fvisibility=hidden"
+    export CFLAGS
+    AC_COMPILE_IFELSE([AC_LANG_SOURCE([int foo;])], [
+        use_visibility_hidden=yes
+    ], [
+        use_visibility_hidden=no
+    ])
     CFLAGS="$OCFLAGS"
     export CFLAGS
-])
+fi
+if test x$use_visibility_hidden = xyes; then
+    CFLAGS="$CFLAGS -fvisibility=hidden"
+    export CFLAGS
+fi
 
 # Checks for library functions.
 AC_FUNC_ALLOCA
