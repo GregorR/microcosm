@@ -12,6 +12,13 @@
 
 #include "buffer.h"
 
+/* feature test macros to use while checking for host features */
+#define FEATURE_TEST_MACROS \
+    "#define _GNU_SOURCE\n" \
+    "#define _BSD_SOURCE\n" \
+    "#define _POSIX_C_SOURCE 200809L\n" \
+    "#define _XOPEN_SOURCE 700\n"
+
 /* bleh globals */
 static const char whitespace[] = " \t\r\n";
 static struct Buffer_char includes;
@@ -211,7 +218,8 @@ static void handleStructDeclaration(struct Buffer_char *str,
     /* figure out if the host supports it */
     hostSupports = 0;
     if (!startCC(&ccs)) {
-        fprintf(ccs.f, "%.*s"
+        fprintf(ccs.f, FEATURE_TEST_MACROS
+            "%.*s"
             "void __support_test() {\n"
             "%s __support_test_struct;\n"
             "(void) __support_test_struct.%s;\n"
@@ -386,7 +394,8 @@ static void handleEnumFlagsDeclaration(struct Buffer_char *h2g,
     /* figure out if the host supports it */
     hostSupports = 0;
     if (!startCC(&ccs)) {
-        fprintf(ccs.f, "%.*s"
+        fprintf(ccs.f, FEATURE_TEST_MACROS
+            "%.*s"
             "void __support_test() {\n"
             "(void) %s;\n"
             "}\n",

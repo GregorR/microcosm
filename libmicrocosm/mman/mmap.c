@@ -1,3 +1,7 @@
+/* most important mmap flags are unspecified */
+#define _GNU_SOURCE
+#define _BSD_SOURCE
+
 #include "config.h"
 
 #include <sys/mman.h>

@@ -1,3 +1,9 @@
+/* ioctl flags are from all over the place, enable everything */
+#define _GNU_SOURCE
+#define _BSD_SOURCE
+#define _POSIX_C_SOURCE 200809L
+#define _XOPEN_SOURCE 700
+
 #include "config.h"
 
 #include <stdio.h>
