@@ -1,5 +1,6 @@
 conv
 include <sys/ioctl.h>
+include <termios.h>
 struct struct winsize {
     unsigned short ws_row;
     unsigned short ws_col;

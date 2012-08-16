@@ -17,7 +17,9 @@
     "#define _GNU_SOURCE\n" \
     "#define _BSD_SOURCE\n" \
     "#define _POSIX_C_SOURCE 200809L\n" \
-    "#define _XOPEN_SOURCE 700\n"
+    "#define _XOPEN_SOURCE 600\n" \
+    "#define __EXTENSIONS__ 1\n" \
+    "#define __BSD_VISIBLE 1\n"
 
 /* bleh globals */
 static const char whitespace[] = " \t\r\n";

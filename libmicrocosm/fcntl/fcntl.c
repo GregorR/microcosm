@@ -1,6 +1,6 @@
 /* both of these are to get all fcntl flags possible */
 #define _POSIX_C_SOURCE 200809L
-#define _XOPEN_SOURCE 700
+#define _XOPEN_SOURCE 600
 
 #include "config.h"
 
