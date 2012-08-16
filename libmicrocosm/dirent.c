@@ -38,16 +38,32 @@ VISIBLE MC_ABI void *microcosm__opendir(const char *name)
 
 VISIBLE MC_ABI int microcosm__readdir_r(void *dirp, struct MC_struct_dirent *gd, struct MC_struct_dirent **gr)
 {
-    struct dirent hd, *hr;
-    int ret = readdir_r(dirp, &hd, &hr);
+    struct dirent *hd, *hr;
+    long name_max;
+    int ret;
+
+    name_max = fpathconf(dirfd((DIR *) dirp), _PC_NAME_MAX);
+    if (name_max == -1)
+#ifdef NAME_MAX
+        name_max = (NAME_MAX > 255) ? NAME_MAX : 255;
+#else
+        return -1; 
+#endif
+    hd = malloc(sizeof(struct dirent) + name_max);
+    if (hd == NULL) return -1;
+
+    ret = readdir_r(dirp, hd, &hr);
     if (ret == 0) {
         if (hr == NULL) {
             *gr = NULL;
         } else {
             MC_struct_dirent_h2g(gd, &hd);
+            strncpy(gd->d_name, hd->d_name, sizeof(gd->d_name)-1);
+            gd->d_name[sizeof(gd->d_name)-1] = 0;
             *gr = gd;
         }
     }
+    free(hd);
     return ret;
 }
 
