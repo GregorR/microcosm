@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 200112L /* honestly, this is strictly to make Solaris shut up */
+
 #include "config.h"
 
 #include <poll.h>

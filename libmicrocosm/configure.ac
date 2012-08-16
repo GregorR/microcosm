@@ -38,12 +38,22 @@ AC_SEARCH_LIBS([clock_gettime], [rt])
 # Checks for typedefs, structures, and compiler characteristics.
 AC_SYS_LARGEFILE
 
+# Can we do -std=c99 ?
+AC_LANG([C])
+OCFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -std=c99"
+export CFLAGS
+AC_COMPILE_IFELSE(AC_LANG_SOURCE([int foo;]), [], [
+    CFLAGS="$OCFLAGS"
+    export CFLAGS
+])
+
 # Can we do -fvisibility=hidden ?
 AC_LANG([C])
 OCFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -fvisibility=hidden"
 export CFLAGS
-AC_COMPILE_IFELSE([], [], [
+AC_COMPILE_IFELSE(AC_LANG_SOURCE([int foo;]), [], [
     CFLAGS="$OCFLAGS"
     export CFLAGS
 ])

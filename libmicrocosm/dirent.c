@@ -1,5 +1,5 @@
 #define _POSIX_C_SOURCE 200809L /* for dirfd, fdopendir */
-#define _XOPEN_SOURCE 500 /* for seekdir, telldir */
+#define _XOPEN_SOURCE 600 /* for seekdir, telldir */
 
 /* Due to a bug on FreeBSD, it's impossible to see dirfd with any correct
  * visibility flags */
