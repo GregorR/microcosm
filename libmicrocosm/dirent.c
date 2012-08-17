@@ -42,7 +42,11 @@ VISIBLE MC_ABI int microcosm__readdir_r(void *dirp, struct MC_struct_dirent *gd,
     long name_max;
     int ret;
 
+#ifdef _PC_NAME_MAX
     name_max = fpathconf(dirfd((DIR *) dirp), _PC_NAME_MAX);
+#else
+    name_max = -1;
+#endif
     if (name_max == -1)
 #ifdef NAME_MAX
         name_max = (NAME_MAX > 255) ? NAME_MAX : 255;
