@@ -9,6 +9,7 @@ AC_CONFIG_AUX_DIR([../scripts])
 
 AC_CANONICAL_SYSTEM
 
+m4_include([../scripts/lean.m4])
 AM_INIT_AUTOMAKE
 
 # Checks for programs.
