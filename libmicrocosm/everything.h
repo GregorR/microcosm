@@ -1,4 +1,4 @@
-/* macro to get everything out of everyone w/ feature macros */
+/* header to get everything out of everyone w/ feature macros */
 #ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 200809L
 #endif
@@ -12,9 +12,12 @@
 #ifndef _BSD_SOURCE
 #define _BSD_SOURCE
 #endif
+#ifndef _DARWIN_C_SOURCE /* Mac OS X/Darwin */
+#define _DARWIN_C_SOURCE
+#endif
 #ifndef __EXTENSIONS__
-#define __EXTENSIONS__ 1
+#define __EXTENSIONS__ 1 /* Solaris */
 #endif
 #ifndef __BSD_VISIBLE
-#define __BSD_VISIBLE 1
+#define __BSD_VISIBLE 1 /* FreeBSD (others use _BSD_SOURCE) */
 #endif

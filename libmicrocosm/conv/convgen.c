@@ -14,10 +14,11 @@
 
 /* feature test macros to use while checking for host features */
 #define FEATURE_TEST_MACROS \
-    "#define _GNU_SOURCE\n" \
-    "#define _BSD_SOURCE\n" \
     "#define _POSIX_C_SOURCE 200809L\n" \
     "#define _XOPEN_SOURCE 600\n" \
+    "#define _GNU_SOURCE\n" \
+    "#define _BSD_SOURCE\n" \
+    "#define _DARWIN_C_SOURCE\n" \
     "#define __EXTENSIONS__ 1\n" \
     "#define __BSD_VISIBLE 1\n"
 
